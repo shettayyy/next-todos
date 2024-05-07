@@ -1,0 +1,61 @@
+{
+  "name": "task-master-apis",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/task-master-apis/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/task-master-apis",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/task-master-apis/src/main.ts",
+        "tsConfig": "apps/task-master-apis/tsconfig.app.json",
+        "assets": ["apps/task-master-apis/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "generateLockfile": true,
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "task-master-apis:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "task-master-apis:build:development"
+        },
+        "production": {
+          "buildTarget": "task-master-apis:build:production"
+        }
+      }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/task-master-apis/Dockerfile . -t task-master-apis"
+    }
+  }
+}
