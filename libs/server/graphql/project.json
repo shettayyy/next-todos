@@ -1,0 +1,9 @@
+{
+  "name": "server-graphql",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/server/graphql/src",
+  "projectType": "library",
+  "tags": ["server-graphql"],
+  "// targets": "to see all targets run: nx show project server-graphql --web",
+  "targets": {}
+}

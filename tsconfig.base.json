@@ -8,13 +8,17 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "esModuleInterop": true,
     "target": "es2015",
     "module": "esnext",
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@task-master/server/config": ["libs/server/config/src/index.ts"],
+      "@task-master/server/graphql": ["libs/server/graphql/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
