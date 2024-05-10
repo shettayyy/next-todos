@@ -3,19 +3,13 @@ import http from 'http';
 
 import { env } from '@task-master/server/config';
 import { initializeMiddlewares } from '@task-master/server/config';
-import { resolvers } from './resolvers';
-import { readFileSync } from 'node:fs';
-import path from 'path';
+import { resolvers, typeDefs } from '@task-master/server/graphql';
 
 const app: Express = express();
 const httpServer = http.createServer(app);
 
 const startServer = async () => {
   try {
-    const typeDefs = readFileSync(
-      path.join(__dirname, 'assets/schema.graphql'),
-      'utf8'
-    );
     await initializeMiddlewares(app, httpServer, { resolvers, typeDefs });
 
     const server = httpServer.listen(env.PORT, () => {

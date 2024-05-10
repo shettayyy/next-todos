@@ -16,14 +16,7 @@
         "bundle": false,
         "main": "apps/task-master-apis/src/main.ts",
         "tsConfig": "apps/task-master-apis/tsconfig.app.json",
-        "assets": [
-          "apps/task-master-apis/src/assets",
-          {
-            "input": "apps/task-master-apis/src/assets",
-            "glob": "**/*.graphql",
-            "output": "/apps/task-master-apis/src/assets"
-          }
-        ],
+        "assets": ["apps/task-master-apis/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,

@@ -13,6 +13,7 @@ import { Server } from 'http';
 import mongoose from 'mongoose';
 
 import { env } from '../environment/env';
+import { DocumentNode } from 'graphql';
 
 export async function initializeMiddlewares(
   app: Application,
@@ -21,7 +22,7 @@ export async function initializeMiddlewares(
     typeDefs,
     resolvers,
   }: {
-    typeDefs: string;
+    typeDefs: DocumentNode;
     resolvers: ApolloServerOptionsWithTypeDefs<BaseContext>['resolvers'];
   }
 ) {

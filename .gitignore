@@ -169,3 +169,6 @@ testem.log
 Thumbs.db
 
 .nx/cache
+
+# GraphQL Generated (.generated) files
+*.generated.*
