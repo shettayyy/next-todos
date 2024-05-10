@@ -45,6 +45,13 @@ export async function initializeMiddlewares(
     })
   );
 
+  // Return a welcome message to the root path
+  app.get('/', (_, res) => {
+    res.json({
+      message: 'Welcome to the GraphQL API. Please use the /graphql endpoint.',
+    });
+  });
+
   ////////////////////////////////////////
   // Apollo Server
   ////////////////////////////////////////
