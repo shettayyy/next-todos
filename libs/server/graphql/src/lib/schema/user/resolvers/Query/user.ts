@@ -1,10 +1,17 @@
-import type { QueryResolvers } from './../../../types.generated';
+import { GraphQLError } from 'graphql';
+import { userService } from '../../user.service';
+import type { QueryResolvers, User } from './../../../types.generated';
 
 export const user: NonNullable<QueryResolvers['user']> = async (
   _parent,
   _arg,
-  _ctx
+  ctx
 ) => {
+  const user = (ctx.req.user as User) || null;
+  if (!user?.id) {
+    throw new GraphQLError('User not found');
+  }
+
   /* Implement Query.user resolver logic here */
-  return null;
+  return await userService.getUser(user.id);
 };

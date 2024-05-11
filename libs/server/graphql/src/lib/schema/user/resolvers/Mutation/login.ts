@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { userService } from '../../user.service';
+import { userAuthService } from '../../user.service';
 import type { MutationResolvers } from './../../../types.generated';
 import { ErrorCode } from '@task-master/shared/types';
 export const login: NonNullable<MutationResolvers['login']> = async (
@@ -8,7 +8,7 @@ export const login: NonNullable<MutationResolvers['login']> = async (
   ctx
 ) => {
   try {
-    const result = await userService.loginUser(email, password, ctx.req);
+    const result = await userAuthService.loginUser(email, password, ctx.req);
 
     return result;
   } catch (error) {

@@ -8,7 +8,7 @@ passport.use(UserModel.createStrategy());
 passport.serializeUser(UserModel.serializeUser() as never);
 passport.deserializeUser(UserModel.deserializeUser());
 
-export const userService = {
+export const userAuthService = {
   createUser: async (user: Omit<User, 'id'>, password: string) => {
     try {
       const result = await UserModel.register(
@@ -78,5 +78,19 @@ export const userService = {
         resolve(user);
       });
     });
+  },
+};
+
+export const userService = {
+  getUser: async (id: User['id']): Promise<User | null> => {
+    try {
+      return await UserModel.findById(id);
+    } catch (error) {
+      throw new GraphQLError((error as Error).message, {
+        extensions: {
+          code: ErrorCode.UserNotFound,
+        },
+      });
+    }
   },
 };
