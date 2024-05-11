@@ -12,4 +12,5 @@ export const env = cleanEnv(process.env, {
   S3_BUCKET_NAME: str(),
   HOST: host(),
   PORT: port(),
+  PASSPORT_SECRET: str(),
 });

@@ -7,6 +7,9 @@ const config: CodegenConfig = {
   generates: {
     'libs/server/graphql/src/lib/schema': defineConfig({
       tsConfigFilePath: 'libs/server/graphql/tsconfig.lib.json',
+      typesPluginsConfig: {
+        contextType: 'libs/server/graphql/src/lib/context.type#GraphQLContext',
+      },
     }),
   },
 };

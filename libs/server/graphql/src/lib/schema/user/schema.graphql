@@ -1,18 +1,23 @@
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+}
+
 extend type Query {
   user(id: ID!): User
 }
 
-type User {
-  id: ID!
-  fullName: String!
-  isAdmin: Boolean!
-}
-
 input CreateUserInput {
-  fullName: String!
-  isAdmin: Boolean!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
 }
 
 extend type Mutation {
   createUser(input: CreateUserInput!): User
+  login(email: String!, password: String!): User
+  logout: Boolean
 }

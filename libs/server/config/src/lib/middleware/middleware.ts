@@ -14,6 +14,10 @@ import mongoose from 'mongoose';
 
 import { env } from '../environment/env';
 import { DocumentNode } from 'graphql';
+import passport from 'passport';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import { GraphQLContext } from '@task-master/server/graphql';
 
 export async function initializeMiddlewares(
   app: Application,
@@ -45,6 +49,23 @@ export async function initializeMiddlewares(
     })
   );
 
+  // Passport middleware
+  app.use(
+    session({
+      secret: env.PASSPORT_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      // Use mongo store for session storage using the mongoose connection
+      store: new MongoStore({
+        mongoUrl: env.MONGODB_URI,
+        // https://github.com/jdesboeufs/connect-mongo?tab=readme-ov-file#lazy-session-update
+        touchAfter: 24 * 3600, // time period in seconds
+      }),
+    })
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   // Return a welcome message to the root path
   app.get('/', (_, res) => {
     res.json({
@@ -55,7 +76,7 @@ export async function initializeMiddlewares(
   ////////////////////////////////////////
   // Apollo Server
   ////////////////////////////////////////
-  const server = new ApolloServer({
+  const server = new ApolloServer<GraphQLContext>({
     typeDefs,
     resolvers,
     csrfPrevention: true,
@@ -72,7 +93,14 @@ export async function initializeMiddlewares(
   });
 
   await server.start();
-  await mongoose.connect(env.MONGODB_URI);
+  await mongoose.connect(env.MONGODB_URI, {
+    autoIndex: false,
+  });
 
-  app.use('/graphql', expressMiddleware(server));
+  app.use(
+    '/graphql',
+    expressMiddleware(server, {
+      context: async (context) => context,
+    })
+  );
 }
