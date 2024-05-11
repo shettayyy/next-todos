@@ -24,7 +24,6 @@
     "helmet": "^7.1.0",
     "http": "^0.0.1-security",
     "mongoose": "^8.3.4",
-    "next": "14.0.4",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0",
@@ -46,7 +45,6 @@
     "@nx/eslint-plugin": "19.0.2",
     "@nx/jest": "19.0.2",
     "@nx/js": "19.0.2",
-    "@nx/next": "19.0.2",
     "@nx/node": "19.0.2",
     "@nx/workspace": "19.0.2",
     "@parcel/watcher": "^2.4.1",
@@ -71,7 +69,6 @@
     "cypress": "^13.6.6",
     "esbuild": "^0.19.2",
     "eslint": "~8.57.0",
-    "eslint-config-next": "14.0.4",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-cypress": "^2.13.4",
     "eslint-plugin-import": "2.27.5",
@@ -93,4 +90,3 @@
     "typescript": "~5.4.2"
   }
 }
-
