@@ -1,0 +1,19 @@
+{
+  "name": "client-types",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/client/types/src",
+  "projectType": "library",
+  "tags": ["client-types"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/client/types",
+        "main": "libs/client/types/src/index.ts",
+        "tsConfig": "libs/client/types/tsconfig.lib.json",
+        "assets": ["libs/client/types/*.md"]
+      }
+    }
+  }
+}
