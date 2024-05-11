@@ -19,5 +19,5 @@ input CreateUserInput {
 extend type Mutation {
   createUser(input: CreateUserInput!): User
   login(email: String!, password: String!): User
-  logout: Boolean
+  logout: User
 }

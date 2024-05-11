@@ -66,14 +66,16 @@ export const userService = {
     });
   },
 
-  logoutUser: async (req: Express.Request) => {
+  logoutUser: async (req: Express.Request): Promise<User> => {
+    const user = req.user as User;
+
     return new Promise((resolve, reject) => {
       req.logout((err: Error) => {
         if (err) {
           reject(err);
         }
 
-        resolve(true);
+        resolve(user);
       });
     });
   },

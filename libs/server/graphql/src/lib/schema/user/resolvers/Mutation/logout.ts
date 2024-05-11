@@ -9,10 +9,7 @@ export const logout: NonNullable<MutationResolvers['logout']> = async (
   ctx
 ) => {
   try {
-    // call logout function
-    await userService.logoutUser(ctx.req);
-
-    return true;
+    return await userService.logoutUser(ctx.req);
   } catch (error) {
     throw new GraphQLError((error as Error).message, {
       extensions: {
