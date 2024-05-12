@@ -1,17 +1,17 @@
 import { PageHeader } from '@task-master/client/component/layout';
 import { PageLayout } from '@task-master/shared/ui/component/layout';
-import { Link } from 'react-router-dom';
+import { ButtonLink } from '@task-master/client/component/core';
+import { PlusIcon } from '@heroicons/react/20/solid';
 
 export const Tasks = () => {
   return (
     <PageLayout>
       <PageHeader title="Tasks">
-        <Link
-          to="/create-task"
-          className="bg-slate-100 text-black py-2 px-4 focus:outline-none transition-all rounded-full shadow-sm hover:bg-orange-400 text-sm"
-        >
-          Create Task
-        </Link>
+        <ButtonLink to="/create-task">
+          <PlusIcon className="w-5 h-5" />
+
+          <span>Add Task</span>
+        </ButtonLink>
       </PageHeader>
     </PageLayout>
   );
