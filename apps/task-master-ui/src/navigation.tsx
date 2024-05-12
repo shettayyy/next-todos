@@ -14,7 +14,7 @@ import {
   ProtectedRoute,
   PublicRoute,
 } from '@task-master/client/component/app-specific';
-import { Login } from '@task-master/client/page';
+import { Login, SignUp } from '@task-master/client/page';
 
 export const Navigation = () => {
   const { user, isAuthenticated } = useAuth();
@@ -46,7 +46,7 @@ export const Navigation = () => {
 
             <Route element={<PublicRoute isAuthenticated={isAuthenticated} />}>
               <Route index path="login" element={<Login />} />
-              <Route path="register" element={<div>Register</div>} />
+              <Route path="register" element={<SignUp />} />
             </Route>
           </Route>
         )

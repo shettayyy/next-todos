@@ -1,4 +1,5 @@
-import { Input } from '@task-master/shared/ui/component/core';
+import { Button, Input } from '@task-master/shared/ui/component/core';
+import { PageLayout } from '@task-master/shared/ui/component/layout';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
@@ -14,7 +15,7 @@ export function Login() {
   });
 
   return (
-    <main className="container mx-auto flex flex-1 flex-col items-center justify-center p-4 sm:px-2">
+    <PageLayout>
       <form className="flex flex-col w-72 space-y-4">
         <h1 className="text-4xl font-medium text-left mt-2">Login</h1>
 
@@ -26,19 +27,14 @@ export function Login() {
         />
 
         <Input
-          id="email"
+          id="password"
           label="Password"
           type="password"
           placeholder="Enter your password..."
           {...register('password')}
         />
 
-        <button
-          type="submit"
-          className="bg-slate-100 text-black rounded-md p-2 mt-4"
-        >
-          Login
-        </button>
+        <Button type="submit">Login</Button>
       </form>
 
       <p className="mt-4">
@@ -47,7 +43,7 @@ export function Login() {
           Sign up
         </Link>
       </p>
-    </main>
+    </PageLayout>
   );
 }
 
