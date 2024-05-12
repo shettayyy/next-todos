@@ -1,0 +1,9 @@
+{
+  "name": "client-page",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/client/page/src",
+  "projectType": "library",
+  "tags": ["client-page"],
+  "// targets": "to see all targets run: nx show project client-page --web",
+  "targets": {}
+}

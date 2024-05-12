@@ -16,12 +16,25 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@task-master/client/component/app-specific": [
+        "libs/client/component/app-specific/src/index.ts"
+      ],
+      "@task-master/client/component/core": [
+        "libs/client/component/core/src/index.ts"
+      ],
       "@task-master/client/context": ["libs/client/context/src/index.ts"],
       "@task-master/client/graphql": ["libs/client/graphql/src/index.ts"],
+      "@task-master/client/page": ["libs/client/page/src/index.ts"],
       "@task-master/client/types": ["libs/client/types/src/index.ts"],
       "@task-master/server/config": ["libs/server/config/src/index.ts"],
       "@task-master/server/graphql": ["libs/server/graphql/src/index.ts"],
-      "@task-master/shared/types": ["libs/shared/types/src/index.ts"]
+      "@task-master/shared/types": ["libs/shared/types/src/index.ts"],
+      "@task-master/shared/ui/component/core": [
+        "libs/shared/ui/component/core/src/index.ts"
+      ],
+      "@task-master/shared/ui/component/layout": [
+        "libs/shared/ui/component/layout/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

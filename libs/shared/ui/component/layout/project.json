@@ -1,0 +1,9 @@
+{
+  "name": "shared-ui-component-layout",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/ui/component/layout/src",
+  "projectType": "library",
+  "tags": ["shared-ui-component-layout"],
+  "// targets": "to see all targets run: nx show project shared-ui-component-layout --web",
+  "targets": {}
+}

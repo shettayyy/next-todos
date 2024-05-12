@@ -1,0 +1,9 @@
+{
+  "name": "client-component-app-specific",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/client/component/app-specific/src",
+  "projectType": "library",
+  "tags": ["client-component-app-specific"],
+  "// targets": "to see all targets run: nx show project client-component-app-specific --web",
+  "targets": {}
+}
