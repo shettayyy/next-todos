@@ -22,6 +22,9 @@
       "@task-master/client/component/core": [
         "libs/client/component/core/src/index.ts"
       ],
+      "@task-master/client/component/layout": [
+        "libs/client/component/layout/src/index.ts"
+      ],
       "@task-master/client/context": ["libs/client/context/src/index.ts"],
       "@task-master/client/graphql": ["libs/client/graphql/src/index.ts"],
       "@task-master/client/page": ["libs/client/page/src/index.ts"],

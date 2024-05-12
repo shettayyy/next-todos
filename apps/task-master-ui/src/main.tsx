@@ -6,6 +6,7 @@ import { AuthProvider, ToastProvider } from '@task-master/client/context';
 
 const client = new ApolloClient({
   uri: import.meta.env.VITE_API_URL,
+  credentials: 'include',
   cache: new InMemoryCache(),
 });
 

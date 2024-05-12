@@ -1,5 +1,4 @@
 import { Header } from '@task-master/client/component/core';
-import { Container } from '@task-master/shared/ui/component/layout';
 import {
   Outlet,
   Route,
@@ -15,9 +14,10 @@ import {
   PublicRoute,
 } from '@task-master/client/component/app-specific';
 import { Login, SignUp } from '@task-master/client/page';
+import { Container } from '@task-master/client/component/layout';
 
 export const Navigation = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isAppReady } = useAuth();
 
   const router = useMemo(
     () =>
@@ -26,13 +26,13 @@ export const Navigation = () => {
           <Route
             path="/"
             element={
-              <Container className="bg-neutral-900 text-slate-100 font-poppins font-light">
+              <Container>
                 <Header logo={LogoIcon} user={user} />
                 <Outlet />
               </Container>
             }
             errorElement={
-              <Container className="bg-neutral-900 text-slate-100 font-poppins font-light">
+              <Container>
                 <Header logo={LogoIcon} user={user} />
                 <div>Not Found</div>
               </Container>
@@ -53,6 +53,17 @@ export const Navigation = () => {
       ),
     [isAuthenticated, user]
   );
+
+  if (!isAppReady) {
+    return (
+      <Container className="justify-center items-center space-y-2 flex-col flex">
+        <span role="img" aria-label="Rocket" className="text-4xl animate-pulse">
+          🚀
+        </span>
+        <p>Initializing productivity blast-off sequence...</p>
+      </Container>
+    );
+  }
 
   return <RouterProvider router={router} />;
 };

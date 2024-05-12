@@ -1,6 +1,7 @@
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   CreateUserInput,
+  GET_USER,
   LOGIN,
   LOGOUT,
   REGISTER,
@@ -10,13 +11,19 @@ import {
   FC,
   PropsWithChildren,
   createContext,
+  useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import { useToast } from './toast';
 
 interface AuthProvideProps {
   isAuthenticated: boolean;
+  isLoggingIn?: boolean;
+  isLoggingOut?: boolean;
+  isSigningUp?: boolean;
+  isAppReady?: boolean;
   user?: UserItemFragment;
   setUser: React.Dispatch<React.SetStateAction<UserItemFragment | undefined>>;
   onLogin: (email: string, password: string) => void;
@@ -26,6 +33,10 @@ interface AuthProvideProps {
 
 const AuthContext = createContext<AuthProvideProps>({
   isAuthenticated: false,
+  isLoggingIn: false,
+  isLoggingOut: false,
+  isSigningUp: false,
+  isAppReady: false,
   user: undefined,
   setUser: () => null,
   onLogin: () => null,
@@ -35,41 +46,19 @@ const AuthContext = createContext<AuthProvideProps>({
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<AuthProvideProps['user']>(undefined);
+  const [isAppReady, setAppReady] = useState(false);
   const { showToast } = useToast();
 
   // Mutation to login
-  const [login] = useMutation(LOGIN, {
-    onCompleted: (data) => {
-      if (data.login) {
-        setUser(data.login);
-      }
-    },
-    onError: (error) => {
-      showToast('error', error.message);
-    },
-  });
+  const [login, { loading: isLoggingIn }] = useMutation(LOGIN);
 
   // Mutation to logout
-  const [logout] = useMutation(LOGOUT, {
-    onCompleted: () => {
-      setUser(undefined);
-    },
-    onError: (error) => {
-      showToast('error', error.message);
-    },
-  });
+  const [logout, { loading: isLoggingOut }] = useMutation(LOGOUT);
 
   // Mutation to register
-  const [register] = useMutation(REGISTER, {
-    onCompleted: (data) => {
-      if (data.createUser) {
-        setUser(data.createUser);
-      }
-    },
-    onError: (error) => {
-      showToast('error', error.message);
-    },
-  });
+  const [register, { loading: isSigningUp }] = useMutation(REGISTER);
+
+  const [getUser] = useLazyQuery(GET_USER);
 
   /**
    * Allow user to login with email and password
@@ -86,7 +75,19 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
    * onLogin('john.doe@gmail.com', 'password');
    */
   const onLogin = (email: string, password: string) => {
-    login({ variables: { email, password } });
+    login({
+      variables: { email, password },
+      onCompleted: (data) => {
+        if (data.login) {
+          setUser(data.login);
+        }
+      },
+      onError: (error) => {
+        showToast('error', error.message, {
+          toastId: 'login-error',
+        });
+      },
+    });
   };
 
   /**
@@ -102,8 +103,37 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
    * onLogout();
    */
   const onLogout = () => {
-    logout();
+    logout({
+      onCompleted: () => {
+        setUser(undefined);
+      },
+      onError: (error) => {
+        showToast('error', error.message, {
+          toastId: 'logout-error',
+        });
+      },
+    });
   };
+
+  /**
+   * Fetch user profile
+   *
+   * @return {void}
+   */
+  const fetchUser = useCallback(async () => {
+    try {
+      const result = await getUser();
+      if (result?.data?.user) {
+        setUser(result.data.user as UserItemFragment);
+      }
+    } catch (error) {
+      showToast('error', (error as Error).message, {
+        toastId: 'fetch-user-error',
+      });
+    } finally {
+      setAppReady(true);
+    }
+  }, [getUser, showToast]);
 
   /**
    * Allow user to register
@@ -123,14 +153,34 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
    * });
    */
   const onRegister = (user: CreateUserInput) => {
-    register({ variables: { input: user } });
+    register({
+      variables: { input: user },
+      onCompleted: (data) => {
+        if (data.createUser) {
+          setUser(data.createUser);
+        }
+      },
+      onError: (error) => {
+        showToast('error', error.message, {
+          toastId: 'register-error',
+        });
+      },
+    });
   };
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
 
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated: !!user,
         user,
+        isLoggingIn,
+        isLoggingOut,
+        isSigningUp,
+        isAppReady,
         setUser,
         onLogin,
         onLogout,

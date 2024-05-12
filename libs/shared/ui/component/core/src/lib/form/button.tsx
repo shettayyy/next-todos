@@ -19,7 +19,7 @@ export const Button: FC<ButtonProps> = forwardRef<
     <button
       ref={ref}
       className={clsx(
-        'border border-transparent shadow-sm bg-slate-100 text-black rounded-md p-2 mt-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all',
+        'border border-transparent shadow-sm bg-slate-100 text-black rounded-md p-2 mt-4 focus:outline-none transition-all',
         props.className,
         {
           'bg-slate-100 hover:bg-slate-400': variant === 'primary',

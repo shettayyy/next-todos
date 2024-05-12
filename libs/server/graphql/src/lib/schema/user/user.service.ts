@@ -48,7 +48,11 @@ export const userAuthService = {
 
           // If the user is not found, reject the promise
           if (!user) {
-            reject(new Error('User not found'));
+            reject(
+              new Error(
+                'We could not find a user with that email and password. Please try again.'
+              )
+            );
           }
 
           // Log the user in if the user is found and successfully authenticated

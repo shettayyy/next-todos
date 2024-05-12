@@ -45,7 +45,8 @@ export async function initializeMiddlewares(
   app.use(
     cors({
       // allow any origin in development
-      origin: '*',
+      origin: [env.CORS_ORIGIN],
+      credentials: true,
     })
   );
 

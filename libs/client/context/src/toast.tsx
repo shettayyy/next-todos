@@ -73,7 +73,7 @@ export const ToastProvider: FC<PropsWithChildren> = ({ children }) => {
       }}
     >
       {children}
-      <ToastContainer />
+      <ToastContainer limit={3} />
     </ToastContext.Provider>
   );
 };
