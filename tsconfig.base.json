@@ -37,7 +37,8 @@
       ],
       "@task-master/shared/ui/component/layout": [
         "libs/shared/ui/component/layout/src/index.ts"
-      ]
+      ],
+      "@task-master/shared/utils": ["libs/shared/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

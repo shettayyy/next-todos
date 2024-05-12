@@ -17,7 +17,7 @@ import { Login, SignUp } from '@task-master/client/page';
 import { Container } from '@task-master/client/component/layout';
 
 export const Navigation = () => {
-  const { user, isAuthenticated, isAppReady } = useAuth();
+  const { user, isAuthenticated, isAppReady, onLogout } = useAuth();
 
   const router = useMemo(
     () =>
@@ -27,13 +27,13 @@ export const Navigation = () => {
             path="/"
             element={
               <Container>
-                <Header logo={LogoIcon} user={user} />
+                <Header onLogout={onLogout} logo={LogoIcon} user={user} />
                 <Outlet />
               </Container>
             }
             errorElement={
               <Container>
-                <Header logo={LogoIcon} user={user} />
+                <Header onLogout={onLogout} logo={LogoIcon} user={user} />
                 <div>Not Found</div>
               </Container>
             }
@@ -51,7 +51,7 @@ export const Navigation = () => {
           </Route>
         )
       ),
-    [isAuthenticated, user]
+    [isAuthenticated, onLogout, user]
   );
 
   if (!isAppReady) {
