@@ -117,9 +117,9 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
    * const { onRegister } = useAuth();
    *
    * onRegister({
-   *   email: '
-   *  firstName: 'John',
-   * lastName: 'Doe',
+   *   email: 'john.doe@gmail.com',
+   *   firstName: 'John',
+   *   lastName: 'Doe',
    * });
    */
   const onRegister = (user: CreateUserInput) => {
