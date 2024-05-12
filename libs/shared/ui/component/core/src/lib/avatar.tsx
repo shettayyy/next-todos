@@ -19,7 +19,7 @@ export const Avatar: FC<AvatarProps> = ({ src, alt, text, className }) => {
   return (
     <div
       className={clsx(
-        'rounded-full bg-gray-200 text-black font-semibold flex items-center justify-center',
+        'rounded-full bg-gray-200 text-black font-semibold flex items-center justify-center hover:bg-orange-400 transition-all',
         className
       )}
     >

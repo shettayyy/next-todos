@@ -1,8 +1,16 @@
-import { FC, PropsWithChildren } from 'react';
+import clsx from 'clsx';
+import { FC, HTMLAttributes, PropsWithChildren } from 'react';
 
-export const PageLayout: FC<PropsWithChildren> = ({ children }) => {
+export const PageLayout: FC<
+  PropsWithChildren<HTMLAttributes<HTMLDivElement>>
+> = ({ children, className }) => {
   return (
-    <main className="container mx-auto flex flex-1 flex-col items-center justify-center p-4 sm:px-2">
+    <main
+      className={clsx(
+        'container mx-auto flex flex-1 flex-col p-4 sm:px-2',
+        className
+      )}
+    >
       {children}
     </main>
   );

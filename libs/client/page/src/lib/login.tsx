@@ -23,7 +23,7 @@ export function Login() {
   };
 
   return (
-    <PageLayout>
+    <PageLayout className="items-center justify-center">
       <form
         className="flex flex-col w-72 md:w-96 space-y-4"
         onSubmit={handleSubmit(onSubmit)}

@@ -10,10 +10,11 @@ import LogoIcon from './assets/logo.svg';
 import { useMemo } from 'react';
 import { useAuth } from '@task-master/client/context';
 import {
+  NotFound,
   ProtectedRoute,
   PublicRoute,
 } from '@task-master/client/component/app-specific';
-import { Login, SignUp } from '@task-master/client/page';
+import { Login, SignUp, TaskForm, Tasks } from '@task-master/client/page';
 import { Container } from '@task-master/client/component/layout';
 
 export const Navigation = () => {
@@ -32,16 +33,16 @@ export const Navigation = () => {
               </Container>
             }
             errorElement={
-              <Container>
+              <NotFound>
                 <Header onLogout={onLogout} logo={LogoIcon} user={user} />
-                <div>Not Found</div>
-              </Container>
+              </NotFound>
             }
           >
             <Route
               element={<ProtectedRoute isAuthenticated={isAuthenticated} />}
             >
-              <Route index element={<div>Contact</div>} />
+              <Route index element={<Tasks />} />
+              <Route path="create-task" element={<TaskForm />} />
             </Route>
 
             <Route element={<PublicRoute isAuthenticated={isAuthenticated} />}>

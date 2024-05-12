@@ -20,7 +20,7 @@ export const SignUp = () => {
   });
 
   return (
-    <PageLayout>
+    <PageLayout className="items-center justify-center">
       <form className="flex flex-col w-72 md:w-96 space-y-4">
         <h1 className="text-4xl font-medium text-left mt-2">Sign Up</h1>
 

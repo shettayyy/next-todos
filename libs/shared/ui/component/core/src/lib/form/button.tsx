@@ -22,7 +22,7 @@ export const Button: FC<ButtonProps> = forwardRef<
         'border border-transparent shadow-sm bg-slate-100 text-black rounded-md p-2 mt-4 focus:outline-none transition-all',
         props.className,
         {
-          'bg-slate-100 hover:bg-slate-400': variant === 'primary',
+          'bg-slate-100 hover:bg-orange-400': variant === 'primary',
           'bg-red-500 hover:bg-red-600': variant === 'danger',
           'bg-green-500 hover:bg-green-600': variant === 'success',
         }
