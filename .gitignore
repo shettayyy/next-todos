@@ -172,3 +172,4 @@ Thumbs.db
 
 # GraphQL Generated (.generated) files
 *.generated.*
+**/__generated__/

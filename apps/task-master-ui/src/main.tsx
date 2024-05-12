@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { Navigation } from './navigation';
+import { AuthProvider, ToastProvider } from '@task-master/client/context';
 
 const client = new ApolloClient({
   uri: import.meta.env.VITE_API_URL,
@@ -14,8 +15,12 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <ApolloProvider client={client}>
-      <Navigation />
-    </ApolloProvider>
+    <ToastProvider>
+      <ApolloProvider client={client}>
+        <AuthProvider>
+          <Navigation />
+        </AuthProvider>
+      </ApolloProvider>
+    </ToastProvider>
   </StrictMode>
 );

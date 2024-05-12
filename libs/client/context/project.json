@@ -1,0 +1,9 @@
+{
+  "name": "client-context",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/client/context/src",
+  "projectType": "library",
+  "tags": ["client-context"],
+  "// targets": "to see all targets run: nx show project client-context --web",
+  "targets": {}
+}

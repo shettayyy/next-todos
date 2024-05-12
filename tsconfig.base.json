@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@task-master/client/graphql": ["libs/client/graphql/src/index.ts"],
+      "@task-master/client/context": ["libs/client/context/src/index.ts"],
       "@task-master/client/types": ["libs/client/types/src/index.ts"],
       "@task-master/server/config": ["libs/server/config/src/index.ts"],
       "@task-master/server/graphql": ["libs/server/graphql/src/index.ts"],
