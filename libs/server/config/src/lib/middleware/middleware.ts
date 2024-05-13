@@ -17,7 +17,8 @@ import { DocumentNode } from 'graphql';
 import passport from 'passport';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-import { GraphQLContext } from '@task-master/server/graphql';
+import { GraphQLContext, authTransformer } from '@task-master/server/graphql';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 
 export async function initializeMiddlewares(
   app: Application,
@@ -74,12 +75,20 @@ export async function initializeMiddlewares(
     });
   });
 
+  // Create the schema from the type definitions and resolvers
+  const rawSchema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  });
+
+  // Transform the schema to include the necessary directives
+  const schema = authTransformer(rawSchema);
+
   ////////////////////////////////////////
   // Apollo Server
   ////////////////////////////////////////
   const server = new ApolloServer<GraphQLContext>({
-    typeDefs,
-    resolvers,
+    schema,
     csrfPrevention: true,
     // https://www.apollographql.com/docs/apollo-server/migration#appropriate-400-status-codes
     status400ForVariableCoercionErrors: true,

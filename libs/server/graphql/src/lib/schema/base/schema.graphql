@@ -1,2 +1,33 @@
 type Query
 type Mutation
+
+type Pagination {
+  """
+  The current page of the result
+  """
+  currentPage: Int
+  """
+  Next page number
+  """
+  nextPage: Int
+  """
+  Previous page number
+  """
+  prevPage: Int
+  """
+  First page number
+  """
+  firstPage: Int
+  """
+  Last page number
+  """
+  lastPage: Int
+  """
+  The total items in the database
+  """
+  total: Int
+}
+
+directive @auth on OBJECT | FIELD_DEFINITION
+
+scalar ObjectID

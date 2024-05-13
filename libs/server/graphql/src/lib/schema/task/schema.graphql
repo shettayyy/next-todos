@@ -1,0 +1,77 @@
+type TaskStatus {
+  value: ID!
+  label: String!
+}
+
+type Task {
+  id: ObjectID!
+  userId: ObjectID!
+  title: String!
+  description: String!
+  status: TaskStatus!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Metadata {
+  """
+  The pagination metadata of the task result
+  """
+  pagination: Pagination!
+}
+
+type TaskList {
+  """
+  The list of tasks
+  """
+  items: [Task!]!
+  """
+  The pagination metadata of the tasks result
+  """
+  metadata: Metadata!
+}
+
+input TaskParams {
+  """
+  The page number of the task list
+  """
+  page: Int
+  """
+  The limit of the task list
+  """
+  limit: Int
+  """
+  The search query for the task list
+  """
+  search: String
+  """
+  Sort the task list by the field
+  """
+  sortBy: String
+  """
+  Sort the task list in ascending or descending order
+  """
+  sortDir: String
+  """
+  Filter the task list by the status
+  """
+  status: ID
+}
+
+extend type Query {
+  tasks(input: TaskParams): TaskList @auth
+  task(id: ID!): Task @auth
+  taskStatuses: [TaskStatus!]! @auth
+}
+
+input CreateTaskInput {
+  title: String!
+  description: String!
+  status: ID!
+}
+
+extend type Mutation {
+  createTask(input: CreateTaskInput!): Task @auth
+  updateTask(id: ID!, input: CreateTaskInput!): Task @auth
+  deleteTask(id: ID!): Task @auth
+}

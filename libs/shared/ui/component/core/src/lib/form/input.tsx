@@ -11,7 +11,7 @@ export interface InputProps extends HTMLAttributes<HTMLInputElement> {
 export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
   (props, ref) => {
     return (
-      <div className="space-y-2">
+      <fieldset className="space-y-2">
         <label
           htmlFor={props.id}
           className={clsx(
@@ -35,8 +35,8 @@ export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
           </span>
         </label>
 
-        <div className="text-red-500 text-xs md:text-sm">{props.error}</div>
-      </div>
+        <p className="text-red-500 text-xs md:text-sm">{props.error}</p>
+      </fieldset>
     );
   }
 );

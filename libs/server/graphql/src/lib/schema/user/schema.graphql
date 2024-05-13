@@ -1,12 +1,12 @@
 type User {
-  id: ID!
+  id: ObjectID!
   firstName: String!
   lastName: String!
   email: String!
 }
 
 extend type Query {
-  user: User
+  user: User @auth
 }
 
 input CreateUserInput {

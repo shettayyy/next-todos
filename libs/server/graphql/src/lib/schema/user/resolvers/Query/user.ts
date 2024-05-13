@@ -8,6 +8,7 @@ export const user: NonNullable<QueryResolvers['user']> = async (
   ctx
 ) => {
   const user = (ctx.req.user as User) || null;
+
   if (!user?.id) {
     throw new GraphQLError('User not found');
   }

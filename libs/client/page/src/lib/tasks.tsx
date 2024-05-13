@@ -7,7 +7,7 @@ export const Tasks = () => {
   return (
     <PageLayout>
       <PageHeader title="Tasks">
-        <ButtonLink to="/create-task">
+        <ButtonLink to="/add-task">
           <PlusIcon className="w-5 h-5" />
 
           <span>Add Task</span>

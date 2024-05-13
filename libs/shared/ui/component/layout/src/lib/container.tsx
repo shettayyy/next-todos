@@ -7,7 +7,7 @@ export const Container: FC<ContainerProps> = (props) => {
   const { children, className } = props;
 
   return (
-    <div className={clsx('mx-auto flex flex-col h-screen', className)}>
+    <div className={clsx('mx-auto flex flex-col min-h-screen', className)}>
       {children}
     </div>
   );
