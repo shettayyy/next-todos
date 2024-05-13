@@ -1,8 +1,9 @@
+import { taskService } from '../../task.service';
 import type { QueryResolvers } from './../../../types.generated';
 export const task: NonNullable<QueryResolvers['task']> = async (
   _parent,
-  _arg,
-  _ctx
+  arg,
+  ctx
 ) => {
-  return null;
+  return taskService.getTask(arg.id, ctx.req.user.id);
 };

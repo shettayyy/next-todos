@@ -188,7 +188,8 @@ export const taskService = {
         })
         .skip((page - 1) * limit)
         .limit(limit)
-        .populate('user');
+        .populate('user')
+        .populate('taskStatus');
       // Total number of tasks
       const total = await TaskModel.countDocuments(query);
 
@@ -208,6 +209,40 @@ export const taskService = {
           },
         },
       };
+    } catch (error) {
+      return handleGraphQLError(error);
+    }
+  },
+  /**
+   * Get a task by ID
+   *
+   * @param taskId Task ID
+   * @param userId User ID
+   *
+   * @returns Task
+   *
+   * @throws GraphQLError
+   *
+   * @example
+   * ```ts
+   * const task = await taskService.getTask('task-id', 'user-id');
+   * ```
+   */
+  getTask: async (taskId: string, userId: string): Promise<Task> => {
+    try {
+      const task = await TaskModel.findOne({ _id: taskId, userId })
+        .populate('user')
+        .populate('taskStatus');
+
+      if (!task) {
+        throw new GraphQLError('Task not found', {
+          extensions: {
+            code: ErrorCode.TaskNotFound,
+          },
+        });
+      }
+
+      return task;
     } catch (error) {
       return handleGraphQLError(error);
     }

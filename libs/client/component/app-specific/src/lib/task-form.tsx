@@ -6,7 +6,7 @@ import {
   Radiobox,
   Textarea,
 } from '@task-master/shared/ui/component/core';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 export type TaskForm = CreateTaskInput;
@@ -62,9 +62,16 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
     defaultValues: {
       title: '',
       description: '',
-      status: taskStatuses[0].value,
+      status: taskStatuses[0].id,
     },
   });
+
+  const opions = useMemo(() => {
+    return taskStatuses.map((status) => ({
+      value: status.id,
+      label: status.status,
+    }));
+  }, [taskStatuses]);
 
   return (
     <form
@@ -72,7 +79,7 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <Radiobox
-        options={taskStatuses}
+        options={opions}
         {...register('status', {
           required: 'Status is required',
         })}

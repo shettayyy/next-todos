@@ -10,4 +10,8 @@ export enum ErrorCode {
   TaskCreationFailed = 'TASK_CREATION_FAILED',
   TaskNotFound = 'TASK_NOT_FOUND',
   TaskUpdateFailed = 'TASK_UPDATE_FAILED',
+
+  // Task Status
+  TaskStatusCreationFailed = 'TASK_STATUS_CREATION_FAILED',
+  TaskStatusFetchFailed = 'TASK_STATUS_FETCH_FAILED',
 }

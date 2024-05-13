@@ -45,7 +45,7 @@ export const TaskFormPage = () => {
       return <div>Loading...</div>;
     }
 
-    if (!data?.taskStatuses) {
+    if (!data?.taskStatuses || !data.taskStatuses.length) {
       return (
         <div className="text-red-600 justify-center items-center flex flex-col flex-1">
           <span>

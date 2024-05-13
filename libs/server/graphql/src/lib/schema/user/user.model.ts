@@ -2,6 +2,8 @@ import { Schema, model } from 'mongoose';
 import { User } from '../types.generated';
 import passportLocalMongoose from 'passport-local-mongoose';
 
+export const UserCollection = 'user';
+
 export const UserSchema = new Schema<User>(
   {
     firstName: { type: String, required: true },
@@ -20,4 +22,4 @@ UserSchema.plugin(passportLocalMongoose, {
   },
 });
 
-export const UserModel = model<User>('User', UserSchema);
+export const UserModel = model<User>(UserCollection, UserSchema);

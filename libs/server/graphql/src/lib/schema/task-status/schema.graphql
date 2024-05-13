@@ -1,0 +1,12 @@
+type TaskStatus {
+  id: ObjectID!
+  status: String!
+}
+
+extend type Query {
+  taskStatuses: [TaskStatus!] @auth
+}
+
+extend type Mutation {
+  createTaskStatus(status: String!): TaskStatus @auth
+}

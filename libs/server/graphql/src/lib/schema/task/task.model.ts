@@ -1,27 +1,21 @@
 import { Schema, model } from 'mongoose';
 import { Task } from '../types.generated';
 import { GraphQLError } from 'graphql';
+import { UserCollection } from '../user/user.model';
+import { TaskStatusCollection } from '../task-status/task-status.model';
 
-export const TASK_STATUSES = [
-  {
-    value: '1',
-    label: 'To Do',
-  },
-  {
-    value: '2',
-    label: 'In Progress',
-  },
-  {
-    value: '3',
-    label: 'Done',
-  },
-];
+export const TaskCollection = 'task';
 
+// Task schema
 export const TaskSchema = new Schema<Task>(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
-    status: { type: String, required: true },
+    status: {
+      type: Schema.Types.ObjectId,
+      ref: 'TaskStatus',
+      required: true,
+    } as never,
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
@@ -34,8 +28,15 @@ export const TaskSchema = new Schema<Task>(
 );
 
 TaskSchema.virtual('user', {
-  ref: 'User',
+  ref: UserCollection,
   localField: 'userId',
+  foreignField: '_id',
+  justOne: true,
+});
+
+TaskSchema.virtual('taskStatus', {
+  ref: TaskStatusCollection,
+  localField: 'status',
   foreignField: '_id',
   justOne: true,
 });
@@ -48,17 +49,6 @@ TaskSchema.pre('validate', function (next) {
   if (!this.title || !this.description || !this.status || !this.userId) {
     next(
       new GraphQLError('All fields are required', {
-        extensions: {
-          code: 'BAD_USER_INPUT',
-        },
-      })
-    );
-  }
-
-  // Ensure the status is one of the valid values
-  if (!TASK_STATUSES.map((item) => item.value).includes(this.status)) {
-    next(
-      new GraphQLError('Invalid status', {
         extensions: {
           code: 'BAD_USER_INPUT',
         },
@@ -113,4 +103,4 @@ TaskSchema.pre('validate', function (next) {
   next();
 });
 
-export const TaskModel = model<Task>('Task', TaskSchema);
+export const TaskModel = model<Task>(TaskCollection, TaskSchema);
