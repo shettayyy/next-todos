@@ -8,7 +8,7 @@ type Task {
   userId: ObjectID!
   title: String!
   description: String!
-  status: TaskStatus!
+  status: String!
   createdAt: String!
   updatedAt: String!
 }

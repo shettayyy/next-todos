@@ -1,3 +1,4 @@
+import { handleGraphQLError } from '@task-master/shared/utils';
 import passport from 'passport';
 import { UserModel } from './user.model';
 import { GraphQLError } from 'graphql';
@@ -21,16 +22,16 @@ export const userAuthService = {
       );
 
       if (!result || !result.id) {
-        throw new Error('Failed to create user');
+        throw new GraphQLError('Failed to create user', {
+          extensions: {
+            code: ErrorCode.UserRegistrationFailed,
+          },
+        });
       }
 
       return result;
     } catch (error) {
-      throw new GraphQLError((error as Error).message, {
-        extensions: {
-          code: ErrorCode.UserRegistrationFailed,
-        },
-      });
+      return handleGraphQLError(error, ErrorCode.UserRegistrationFailed);
     }
   },
 
@@ -88,13 +89,19 @@ export const userAuthService = {
 export const userService = {
   getUser: async (id: User['id']): Promise<User | null> => {
     try {
-      return await UserModel.findById(id);
+      const result = await UserModel.findById(id);
+
+      if (!result) {
+        throw new GraphQLError('User not found', {
+          extensions: {
+            code: ErrorCode.UserNotFound,
+          },
+        });
+      }
+
+      return result;
     } catch (error) {
-      throw new GraphQLError((error as Error).message, {
-        extensions: {
-          code: ErrorCode.UserNotFound,
-        },
-      });
+      return handleGraphQLError(error);
     }
   },
 };
