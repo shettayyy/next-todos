@@ -6,6 +6,21 @@ import { handleGraphQLError } from '@task-master/shared/utils';
 import { UpdateQuery } from 'mongoose';
 
 export const taskService = {
+  /**
+   * Create a task
+   *
+   * @param task Task data
+   * @param userId User ID
+   *
+   * @returns Created task
+   *
+   * @throws GraphQLError
+   *
+   * @example
+   * ```ts
+   * const task = await taskService.createTask({ title: 'New Task' }, 'user-id');
+   * ```
+   */
   createTask: async (task: CreateTaskInput, userId: string): Promise<Task> => {
     try {
       const result = await TaskModel.create({
@@ -26,8 +41,22 @@ export const taskService = {
       return handleGraphQLError(error);
     }
   },
-  // Update only the task that belongs to the user
-  // Only update the fields that are provided
+  /**
+   * Update a task
+   *
+   * @param taskId Task ID
+   * @param task Task data
+   * @param userId User ID
+   *
+   * @returns Updated task
+   *
+   * @throws GraphQLError
+   *
+   * @example
+   * ```ts
+   * const task = await taskService.updateTask('task-id', { title: 'New Title' }, 'user-id');
+   * ```
+   */
   updateTask: async (
     taskId: string,
     task: Partial<CreateTaskInput>,
@@ -65,6 +94,38 @@ export const taskService = {
         throw new GraphQLError('Failed to update the task', {
           extensions: {
             code: ErrorCode.TaskUpdateFailed,
+          },
+        });
+      }
+
+      return result;
+    } catch (error) {
+      return handleGraphQLError(error);
+    }
+  },
+  /**
+   * Delete a task
+   *
+   * @param taskId Task ID
+   * @param userId User ID
+   *
+   * @returns Deleted task
+   *
+   * @throws GraphQLError
+   *
+   * @example
+   * ```ts
+   * const task = await taskService.deleteTask('task-id', 'user-id');
+   * ```
+   */
+  deleteTask: async (taskId: string, userId: string): Promise<Task> => {
+    try {
+      const result = await TaskModel.findOneAndDelete({ _id: taskId, userId });
+
+      if (!result) {
+        throw new GraphQLError('Task not found', {
+          extensions: {
+            code: ErrorCode.TaskNotFound,
           },
         });
       }
