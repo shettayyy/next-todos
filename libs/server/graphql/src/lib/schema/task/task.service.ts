@@ -1,7 +1,13 @@
-import { ErrorCode } from '@task-master/shared/types';
+import { ErrorCode, PAGINATION } from '@task-master/shared/types';
 import { GraphQLError } from 'graphql';
 import { TaskModel } from './task.model';
-import { CreateTaskInput, Task } from '../types.generated';
+import {
+  CreateTaskInput,
+  InputMaybe,
+  Task,
+  TaskList,
+  TaskParams,
+} from '../types.generated';
 import { handleGraphQLError } from '@task-master/shared/utils';
 import { UpdateQuery } from 'mongoose';
 
@@ -131,6 +137,77 @@ export const taskService = {
       }
 
       return result;
+    } catch (error) {
+      return handleGraphQLError(error);
+    }
+  },
+  /**
+   * Get paginated list of all tasks
+   *
+   * @param userId User ID
+   * @param limit Number of tasks to fetch
+   * @param page Page number
+   * @param filter Filter tasks by status and search query
+   * @param sort Sort tasks by field and direction
+   */
+  getTasks: async (
+    userId: string,
+    params: InputMaybe<TaskParams>
+  ): Promise<TaskList> => {
+    try {
+      const query: Record<string, unknown> = { userId };
+
+      if (params?.filter?.status) {
+        query['status'] = params.filter.status;
+      }
+
+      if (params?.filter?.search) {
+        query['title'] = { $regex: params.filter.search, $options: 'i' };
+      }
+
+      // if (filter?.date) {
+      //   query['createdAt'] = {
+      //     $gte: new Date(filter.date),
+      //     $lt: new Date(new Date(filter.date).setDate(new Date(filter.date).getDate() + 1)),
+      //   };
+      // }
+
+      const page = params?.page ?? PAGINATION.DEFAULT_PAGE;
+      // Limit number of tasks to fetch
+      const limit = Math.min(
+        params?.limit ?? PAGINATION.DEFAULT_LIMIT,
+        PAGINATION.MAX_LIMIT
+      );
+      const sortField = params?.sort?.field ?? 'createdAt';
+      const sortDir = params?.sort?.dir ?? 'ASC';
+
+      const tasks = await TaskModel.find(query)
+
+        .sort({
+          [sortField]: sortDir === 'ASC' ? 1 : -1,
+        })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .populate('user');
+      // Total number of tasks
+      const total = await TaskModel.countDocuments(query);
+
+      // Total number of pages
+      const totalPages = Math.ceil(total / limit);
+
+      return {
+        result: tasks,
+        metadata: {
+          pagination: {
+            currentPage: page,
+            nextPage: page < totalPages ? page + 1 : null,
+            prevPage: page > 1 ? page - 1 : null,
+            firstPage: 1,
+            lastPage: totalPages,
+            total,
+          },
+        },
+      };
     } catch (error) {
       return handleGraphQLError(error);
     }

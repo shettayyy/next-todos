@@ -43,6 +43,7 @@ export const Navigation = () => {
             >
               <Route index element={<Tasks />} />
               <Route path="add-task" element={<TaskFormPage />} />
+              <Route path="edit-task/:id" element={<TaskFormPage />} />
             </Route>
 
             <Route element={<PublicRoute isAuthenticated={isAuthenticated} />}>

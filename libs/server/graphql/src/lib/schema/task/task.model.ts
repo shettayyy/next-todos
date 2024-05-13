@@ -22,12 +22,26 @@ export const TaskSchema = new Schema<Task>(
     title: { type: String, required: true },
     description: { type: String, required: true },
     status: { type: String, required: true },
-    userId: { type: Schema.Types.ObjectId, ref: 'User' } as never,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    } as never,
   },
   {
     timestamps: true,
   }
 );
+
+TaskSchema.virtual('user', {
+  ref: 'User',
+  localField: 'userId',
+  foreignField: '_id',
+  justOne: true,
+});
+
+TaskSchema.set('toObject', { virtuals: true });
+TaskSchema.set('toJSON', { virtuals: true });
 
 // Validate all fields are provided
 TaskSchema.pre('validate', function (next) {

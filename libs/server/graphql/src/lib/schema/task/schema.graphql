@@ -11,6 +11,78 @@ type Task {
   status: String!
   createdAt: String!
   updatedAt: String!
+  user: User!
+}
+
+enum SortDirection {
+  """
+  Sort the list in ascending order
+  """
+  ASC
+  """
+  Sort the list in descending order
+  """
+  DESC
+}
+
+enum SortField {
+  """
+  Sort the list by the title
+  """
+  TITLE
+  """
+  Sort the list by the status
+  """
+  STATUS
+  """
+  Sort the list by the created date
+  """
+  CREATED_AT
+  """
+  Sort the list by the updated date
+  """
+  UPDATED_AT
+}
+
+input TaskSort {
+  """
+  The field to sort the task list
+  """
+  field: SortField!
+  """
+  The direction to sort the task list
+  """
+  dir: SortDirection!
+}
+
+input TaskFilter {
+  """
+  The search query for the task list
+  """
+  search: String!
+  """
+  Filter the task list by the status
+  """
+  status: ID!
+}
+
+input TaskParams {
+  """
+  The page number of the task list
+  """
+  page: Int
+  """
+  The limit of the task list
+  """
+  limit: Int
+  """
+  The filter of the task list
+  """
+  filter: TaskFilter!
+  """
+  The sort of the task list
+  """
+  sort: TaskSort
 }
 
 type Metadata {
@@ -24,38 +96,11 @@ type TaskList {
   """
   The list of tasks
   """
-  items: [Task!]!
+  result: [Task]
   """
   The pagination metadata of the tasks result
   """
   metadata: Metadata!
-}
-
-input TaskParams {
-  """
-  The page number of the task list
-  """
-  page: Int
-  """
-  The limit of the task list
-  """
-  limit: Int
-  """
-  The search query for the task list
-  """
-  search: String
-  """
-  Sort the task list by the field
-  """
-  sortBy: String
-  """
-  Sort the task list in ascending or descending order
-  """
-  sortDir: String
-  """
-  Filter the task list by the status
-  """
-  status: ID
 }
 
 extend type Query {

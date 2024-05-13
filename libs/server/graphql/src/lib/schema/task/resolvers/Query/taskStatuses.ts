@@ -6,5 +6,5 @@ export const taskStatuses: NonNullable<QueryResolvers['taskStatuses']> = async (
   _arg,
   _ctx
 ) => {
-  return TASK_STATUSES;
+  return [...TASK_STATUSES];
 };
