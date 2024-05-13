@@ -24,6 +24,7 @@ export const Button: FC<ButtonProps> = forwardRef<
           'bg-slate-100 hover:bg-orange-400': variant === 'primary',
           'bg-red-500 hover:bg-red-600': variant === 'danger',
           'bg-green-500 hover:bg-green-600': variant === 'success',
+          'cursor-not-allowed opacity-50': props.disabled,
         },
         className
       )}

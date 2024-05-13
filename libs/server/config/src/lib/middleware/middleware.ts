@@ -17,7 +17,7 @@ import { DocumentNode } from 'graphql';
 import passport from 'passport';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-import { GraphQLContext, authTransformer } from '@task-master/server/graphql';
+import { authTransformer } from '@task-master/server/graphql';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
 export async function initializeMiddlewares(
@@ -87,7 +87,7 @@ export async function initializeMiddlewares(
   ////////////////////////////////////////
   // Apollo Server
   ////////////////////////////////////////
-  const server = new ApolloServer<GraphQLContext>({
+  const server = new ApolloServer({
     schema,
     csrfPrevention: true,
     // https://www.apollographql.com/docs/apollo-server/migration#appropriate-400-status-codes

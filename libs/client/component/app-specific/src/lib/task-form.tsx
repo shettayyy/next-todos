@@ -1,4 +1,5 @@
-import { Task, TaskStatus } from '@task-master/client/graphql';
+import { ArrowPathIcon } from '@heroicons/react/20/solid';
+import { CreateTaskInput, TaskStatus } from '@task-master/client/graphql';
 import {
   Button,
   Input,
@@ -8,11 +9,7 @@ import {
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 
-export type TaskForm = {
-  title: Task['title'];
-  description: Task['description'];
-  status: Task['status']['value'];
-};
+export type TaskForm = CreateTaskInput;
 
 export interface TaskFormProps {
   /**
@@ -47,10 +44,16 @@ export interface TaskFormProps {
    * @param data - Form data
    */
   onSubmit: (data: TaskForm) => void;
+  submitting?: boolean;
 }
 
 export const TaskForm: FC<TaskFormProps> = (props) => {
-  const { taskStatuses, onSubmit, submitLabel = 'Submit' } = props;
+  const {
+    taskStatuses,
+    onSubmit,
+    submitLabel = 'Submit',
+    submitting = false,
+  } = props;
   const {
     register,
     handleSubmit,
@@ -94,8 +97,13 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
         error={errors.description?.message}
       />
 
-      <Button className="w-full" type="submit">
-        {submitLabel}
+      <Button
+        className="w-full items-center justify-center flex gap-2"
+        type="submit"
+        disabled={submitting}
+      >
+        <span>{submitLabel}</span>
+        {submitting && <ArrowPathIcon className="w-5 h-5 animate-spin" />}
       </Button>
     </form>
   );

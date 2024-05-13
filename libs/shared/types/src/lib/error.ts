@@ -4,7 +4,8 @@ export enum ErrorCode {
   UserLoginFailed = 'USER_LOGIN_FAILED',
   UserLogoutFailed = 'USER_LOGOUT_FAILED',
   Unauthorized = 'UNAUTHORIZED',
-
-  // User
   UserNotFound = 'USER_NOT_FOUND',
+
+  // Task
+  TaskCreationFailed = 'TASK_CREATION_FAILED',
 }

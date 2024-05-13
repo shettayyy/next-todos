@@ -3,13 +3,19 @@ import { PageLayout } from '@task-master/shared/ui/component/layout';
 import { ButtonLink } from '@task-master/client/component/core';
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
 import { TaskForm } from '@task-master/client/component/app-specific';
-import { useQuery } from '@apollo/client';
-import { GET_TASK_STATUSES } from '@task-master/client/graphql';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  CREATE_TASK,
+  CreateTaskInput,
+  GET_TASK_STATUSES,
+} from '@task-master/client/graphql';
 import { Button } from '@task-master/shared/ui/component/core';
 import { useToast } from '@task-master/client/context';
+import { useNavigate } from 'react-router-dom';
 
 export const TaskFormPage = () => {
   const { showToast } = useToast();
+  const navigate = useNavigate();
   const { loading, data } = useQuery(GET_TASK_STATUSES, {
     onError: (error) => {
       showToast('error', error.message, {
@@ -18,8 +24,20 @@ export const TaskFormPage = () => {
     },
   });
 
-  const onSubmit = (data: TaskForm) => {
-    console.info(data);
+  const [createTask, { loading: submitting }] = useMutation(CREATE_TASK);
+
+  const onSubmit = (data: CreateTaskInput) => {
+    createTask({
+      variables: {
+        input: data,
+      },
+      onCompleted: () => {
+        showToast('success', 'Task created successfully', {
+          toastId: 'task-created',
+        });
+        navigate('/');
+      },
+    });
   };
 
   const renderContent = () => {
@@ -44,6 +62,7 @@ export const TaskFormPage = () => {
       <TaskForm
         submitLabel="Add Task"
         onSubmit={onSubmit}
+        submitting={submitting}
         taskStatuses={data.taskStatuses}
       />
     );

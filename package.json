@@ -5,10 +5,11 @@
   "scripts": {
     "codegen:client": "graphql-codegen --config libs/client/graphql/codegen.ts",
     "codegen:client-watch": "NODE_ENV=development graphql-codegen --config libs/client/graphql/codegen.ts --watch --ignoreNoDocuments",
-    "dev:client": "concurrently --kill-others --names \"CodeGen,Client\" -c \"bgYellow,bgBlue\" \"yarn codegen:client-watch\" \"npx nx serve task-master-ui\"",
+    "dev:client": "concurrently --kill-others --names \"CodeGen,Client\" -c \"bgYellow,bgBlue\" \"npm run codegen:client-watch\" \"npx nx serve task-master-ui\"",
     "codegen:server": "graphql-codegen --config libs/server/graphql/codegen.ts",
     "codegen:server-watch": "graphql-codegen --config libs/server/graphql/codegen.ts --watch --ignoreNoDocuments",
-    "dev:server": "concurrently --kill-others --names \"CodeGen,APIs\" -c \"bgYellow,bgMagenta\" \"yarn codegen:server-watch\" \"npx nx serve task-master-apis\"",
+    "start:server": "npx nx serve task-master-apis",
+    "dev:server": "concurrently --kill-others --names \"CodeGen,APIs\" -c \"bgYellow,bgMagenta\" \"npm run codegen:server-watch\" \"npm run start:server\"",
     "prepare": "husky"
   },
   "private": true,
