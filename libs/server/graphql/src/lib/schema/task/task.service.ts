@@ -273,8 +273,9 @@ export const taskService = {
         });
       }
 
-      const tasks = Array.from({ length: 400 }, () => ({
+      const tasks = Array.from({ length: 400 }, (_, index) => ({
         ...task.toObject(),
+        title: `${task.title} - ${index + 5}`,
         _id: undefined,
       }));
 

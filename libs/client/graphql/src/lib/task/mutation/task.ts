@@ -7,3 +7,11 @@ export const CREATE_TASK = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const DELETE_TASK = gql(/* GraphQL */ `
+  mutation DeleteTask($id: ID!) {
+    deleteTask(id: $id) {
+      id
+    }
+  }
+`);
