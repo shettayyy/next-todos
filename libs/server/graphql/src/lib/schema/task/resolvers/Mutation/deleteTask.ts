@@ -5,6 +5,5 @@ export const deleteTask: NonNullable<MutationResolvers['deleteTask']> = async (
   arg,
   ctx
 ) => {
-  /* Implement Mutation.deleteTask resolver logic here */
   return await taskService.deleteTask(arg.id, ctx.req.user.id);
 };

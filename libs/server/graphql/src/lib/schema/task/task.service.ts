@@ -212,4 +212,66 @@ export const taskService = {
       return handleGraphQLError(error);
     }
   },
+  /**
+   * Pick one task and clone 400 tasks with new ObjectID from for testing purposes
+   *
+   * @param userId User ID
+   *
+   * @returns Boolean value indicating success or failure
+   *
+   * @throws GraphQLError
+   *
+   * @example
+   * ```ts
+   * const success = await taskService.cloneTasks('user-id');
+   * ```
+   */
+  cloneTasks: async (userId: string): Promise<boolean> => {
+    try {
+      const task = await TaskModel.findOne({ userId });
+
+      if (!task) {
+        throw new GraphQLError('Task not found', {
+          extensions: {
+            code: ErrorCode.TaskNotFound,
+          },
+        });
+      }
+
+      const tasks = Array.from({ length: 400 }, () => ({
+        ...task.toObject(),
+        _id: undefined,
+      }));
+
+      await TaskModel.insertMany(tasks);
+
+      return true;
+    } catch (error) {
+      return handleGraphQLError(error);
+    }
+  },
+  /**
+   * Clear all tasks
+   *
+   * @param userId User ID
+   *
+   * @returns Boolean value indicating success or failure
+   *
+   * @throws GraphQLError
+   *
+   * @example
+   *
+   * ```ts
+   * const success = await taskService.clearTasks('user-id');
+   * ```
+   */
+  clearTasks: async (userId: string): Promise<boolean> => {
+    try {
+      await TaskModel.deleteMany({ userId });
+
+      return true;
+    } catch (error) {
+      return handleGraphQLError(error);
+    }
+  },
 };

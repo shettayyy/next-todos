@@ -4,6 +4,5 @@ export const task: NonNullable<QueryResolvers['task']> = async (
   _arg,
   _ctx
 ) => {
-  /* Implement Query.task resolver logic here */
   return null;
 };

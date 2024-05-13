@@ -6,6 +6,5 @@ export const updateTask: NonNullable<MutationResolvers['updateTask']> = async (
   arg,
   ctx
 ) => {
-  /* Implement Mutation.updateTask resolver logic here */
   return await taskService.updateTask(arg.id, arg.input, ctx.req?.user.id);
 };

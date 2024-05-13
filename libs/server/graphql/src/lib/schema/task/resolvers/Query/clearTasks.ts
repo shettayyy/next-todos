@@ -1,10 +1,9 @@
 import { taskService } from '../../task.service';
 import type { QueryResolvers } from './../../../types.generated';
-
-export const tasks: NonNullable<QueryResolvers['tasks']> = async (
+export const clearTasks: NonNullable<QueryResolvers['clearTasks']> = async (
   _parent,
-  arg,
+  _arg,
   ctx
 ) => {
-  return taskService.getTasks(ctx.req.user.id, arg.input);
+  return taskService.clearTasks(ctx.req.user.id);
 };
