@@ -60,7 +60,7 @@ export const Radiobox = forwardRef<HTMLInputElement, RadioboxProps>(
             <label
               key={option.value}
               htmlFor={option.value}
-              className="flex cursor-pointer items-center justify-center rounded-md bg-white px-4 py-2 text-gray-900 hover:bg-orange-300 transition-all duration-200 ease-in-out has-[:checked]:border-orange-400 has-[:checked]:bg-orange-400"
+              className="flex cursor-pointer items-center justify-center rounded-md bg-white px-2 md:px-4 py-2 text-gray-900 hover:bg-orange-300 transition-all duration-200 ease-in-out has-[:checked]:border-orange-400 has-[:checked]:bg-orange-400"
             >
               <input
                 type="radio"
@@ -71,7 +71,7 @@ export const Radiobox = forwardRef<HTMLInputElement, RadioboxProps>(
                 {...restProps}
               />
 
-              <p className="text-sm font-medium">{option.label}</p>
+              <p className="text-xs md:text-sm font-medium">{option.label}</p>
             </label>
           ))}
         </div>

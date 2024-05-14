@@ -75,7 +75,7 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
 
   return (
     <form
-      className="space-y-6 m-auto w-72 md:w-96 justify-center items-center"
+      className="space-y-6 m-auto w-56 md:w-96 justify-center items-center"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Radiobox
