@@ -7,8 +7,8 @@ import { TaskCard } from '@task-master/client/component/app-specific';
 import { useToast } from '@task-master/client/context';
 import {
   Button,
+  ConfirmModal,
   DotMenuIcon,
-  Modal,
 } from '@task-master/shared/ui/component/core';
 import { useToggle } from '@task-master/shared/ui/hooks';
 import { AddTaskPopUp } from '@task-master/client/containers';
@@ -103,26 +103,13 @@ export const Tasks = () => {
 
       <AddTaskPopUp isVisble={isAddTaskModalOpen} onClose={toggle} />
 
-      <Modal
+      <ConfirmModal
         isOpen={!!deleteTaskId}
         onClose={onDeleteToggle()}
-        title="🗑️ Delete Task"
-      >
-        <p>Are you sure you want to delete this task?</p>
-        <div className="flex justify-end gap-2 mt-4">
-          <Button onClick={onDeleteToggle()}>Cancel</Button>
-
-          {deleteTaskId && (
-            <Button
-              disabled={deleting}
-              onClick={onDelete(deleteTaskId)}
-              variant="danger"
-            >
-              {deleting ? 'Deleting...' : 'Delete'}
-            </Button>
-          )}
-        </div>
-      </Modal>
+        confirmBtnLabel={deleting ? 'Deleting...' : 'Delete'}
+        pending={deleting}
+        onConfirm={deleteTaskId ? onDelete(deleteTaskId) : () => null}
+      />
     </PageLayout>
   );
 };
