@@ -18,7 +18,7 @@ import { useState } from 'react';
 export const Tasks = () => {
   const { showToast } = useToast();
   const { data, loading, refetch } = useQuery(GET_TASKS);
-  const [deleteTask] = useMutation(DELETE_TASK);
+  const [deleteTask, { loading: deleting }] = useMutation(DELETE_TASK);
   const [isAddTaskModalOpen, toggle] = useToggle(false);
   const [deleteTaskId, setDeleteTaskId] = useState<string | undefined>(
     undefined
@@ -38,6 +38,7 @@ export const Tasks = () => {
       variables: { id },
       onCompleted: () => {
         showToast('success', 'Task deleted successfully');
+        onDeleteToggle()();
         refetch();
       },
       onError: (error) => showToast('error', (error as Error).message),
@@ -112,8 +113,12 @@ export const Tasks = () => {
           <Button onClick={onDeleteToggle()}>Cancel</Button>
 
           {deleteTaskId && (
-            <Button onClick={onDelete(deleteTaskId)} variant="danger">
-              Delete
+            <Button
+              disabled={deleting}
+              onClick={onDelete(deleteTaskId)}
+              variant="danger"
+            >
+              {deleting ? 'Deleting...' : 'Delete'}
             </Button>
           )}
         </div>

@@ -26,7 +26,6 @@ export const Modal: FC<ModalProps> = (props) => {
       leaveTo="opacity-0"
     >
       <Dialog onClose={onClose} className="relative z-50">
-        {/* The backdrop, rendered as a fixed sibling to the panel container */}
         <div className="fixed inset-0 bg-black/70" aria-hidden="true" />
 
         <div className="fixed inset-0 flex w-screen overflow-y-auto p-4">
