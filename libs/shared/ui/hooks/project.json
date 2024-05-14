@@ -1,0 +1,9 @@
+{
+  "name": "shared-ui--hooks",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/ui/hooks/src",
+  "projectType": "library",
+  "tags": ["shared-ui-hook"],
+  "// targets": "to see all targets run: nx show project shared-ui--hooks --web",
+  "targets": {}
+}

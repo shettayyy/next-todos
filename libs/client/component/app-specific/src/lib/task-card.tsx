@@ -42,7 +42,7 @@ export const TaskCard: React.FC<TaskCardProps> = memo((props) => {
   return (
     <li>
       <span
-        className={clsx('px-3 py-1 text-xs ml-1 font-semibold', {
+        className={clsx('px-3 py-1 text-xs font-semibold', {
           'bg-blue-100 text-blue-800': taskStatus.status === 'To Do',
           'bg-yellow-100 text-yellow-800': taskStatus.status === 'In Progress',
           'bg-green-100 text-green-800': taskStatus.status === 'Done',

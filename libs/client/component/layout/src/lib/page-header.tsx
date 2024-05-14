@@ -13,7 +13,7 @@ export const PageHeader: FC<PageHeaderProps> = ({
 }) => {
   return (
     <div className={clsx('flex justify-between items-center', className)}>
-      <h2 className="font-poppins tracking-widest font-medium uppercase text-2xl">
+      <h2 className="font-raleway tracking-widest font-bold uppercase text-2xl">
         {title}
       </h2>
 

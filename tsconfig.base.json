@@ -25,6 +25,7 @@
       "@task-master/client/component/layout": [
         "libs/client/component/layout/src/index.ts"
       ],
+      "@task-master/client/containers": ["libs/client/containers/src/index.ts"],
       "@task-master/client/context": ["libs/client/context/src/index.ts"],
       "@task-master/client/graphql": ["libs/client/graphql/src/index.ts"],
       "@task-master/client/page": ["libs/client/page/src/index.ts"],
@@ -38,6 +39,7 @@
       "@task-master/shared/ui/component/layout": [
         "libs/shared/ui/component/layout/src/index.ts"
       ],
+      "@task-master/shared/ui/hooks": ["libs/shared/ui/hooks/src/index.ts"],
       "@task-master/shared/utils": ["libs/shared/utils/src/index.ts"]
     }
   },

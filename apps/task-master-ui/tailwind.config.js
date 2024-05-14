@@ -15,6 +15,7 @@ module.exports = {
     extend: {
       fontFamily: {
         poppins: ['Poppins', ...defaultTheme.fontFamily.sans],
+        raleway: ['Raleway', ...defaultTheme.fontFamily.sans],
       },
     },
   },

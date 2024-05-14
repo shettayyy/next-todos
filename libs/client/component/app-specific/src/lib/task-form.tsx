@@ -1,4 +1,4 @@
-import { ArrowPathIcon } from '@heroicons/react/20/solid';
+import { ArrowPathIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { CreateTaskInput, TaskStatus } from '@task-master/client/graphql';
 import {
   Button,
@@ -92,6 +92,7 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
           required: 'Title is required',
           maxLength: { value: 100, message: 'Title is too long' },
         })}
+        placeholder='e.g. "Create a new project"'
         error={errors.title?.message}
       />
 
@@ -101,16 +102,28 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
           required: 'Description is required',
           maxLength: { value: 1000, message: 'Description is too long' },
         })}
+        placeholder='e.g. "Create a new project with the following features..."'
         error={errors.description?.message}
       />
 
       <Button
-        className="w-full items-center justify-center flex gap-2"
+        className="w-full items-center justify-center flex gap-4"
         type="submit"
         disabled={submitting}
       >
-        <span>{submitLabel}</span>
-        {submitting && <ArrowPathIcon className="w-5 h-5 animate-spin" />}
+        {submitting ? (
+          <div className="flex items-center justify-center gap-2">
+            <ArrowPathIcon className="w-5 h-5 animate-spin" />
+
+            <span>Adding your task...</span>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center gap-2">
+            <PlusIcon className="w-5 h-5" />
+
+            <span>{submitLabel}</span>
+          </div>
+        )}
       </Button>
     </form>
   );

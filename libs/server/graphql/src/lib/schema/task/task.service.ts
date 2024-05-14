@@ -179,7 +179,7 @@ export const taskService = {
         PAGINATION.MAX_LIMIT
       );
       const sortField = params?.sort?.field ?? 'createdAt';
-      const sortDir = params?.sort?.dir ?? 'ASC';
+      const sortDir = params?.sort?.dir ?? 'DSC';
 
       const tasks = await TaskModel.find(query)
 

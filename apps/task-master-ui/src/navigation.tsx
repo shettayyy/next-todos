@@ -14,7 +14,7 @@ import {
   ProtectedRoute,
   PublicRoute,
 } from '@task-master/client/component/app-specific';
-import { Login, SignUp, TaskFormPage, Tasks } from '@task-master/client/page';
+import { Login, SignUp, Tasks } from '@task-master/client/page';
 import { Container } from '@task-master/client/component/layout';
 
 export const Navigation = () => {
@@ -42,8 +42,6 @@ export const Navigation = () => {
               element={<ProtectedRoute isAuthenticated={isAuthenticated} />}
             >
               <Route index element={<Tasks />} />
-              <Route path="add-task" element={<TaskFormPage />} />
-              <Route path="edit-task/:id" element={<TaskFormPage />} />
             </Route>
 
             <Route element={<PublicRoute isAuthenticated={isAuthenticated} />}>

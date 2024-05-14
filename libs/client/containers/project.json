@@ -1,0 +1,9 @@
+{
+  "name": "client-containers",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/client/containers/src",
+  "projectType": "library",
+  "tags": ["client-containers"],
+  "// targets": "to see all targets run: nx show project client-containers --web",
+  "targets": {}
+}

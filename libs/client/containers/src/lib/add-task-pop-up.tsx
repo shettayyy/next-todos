@@ -1,21 +1,21 @@
-import { PageHeader } from '@task-master/client/component/layout';
-import { PageLayout } from '@task-master/shared/ui/component/layout';
-import { ButtonLink } from '@task-master/client/component/core';
-import { ChevronLeftIcon } from '@heroicons/react/20/solid';
-import { TaskForm } from '@task-master/client/component/app-specific';
 import { useMutation, useQuery } from '@apollo/client';
+import { TaskForm } from '@task-master/client/component/app-specific';
+import { useToast } from '@task-master/client/context';
 import {
   CREATE_TASK,
   CreateTaskInput,
   GET_TASK_STATUSES,
 } from '@task-master/client/graphql';
-import { Button } from '@task-master/shared/ui/component/core';
-import { useToast } from '@task-master/client/context';
-import { useNavigate } from 'react-router-dom';
+import { Button, Modal } from '@task-master/shared/ui/component/core';
 
-export const TaskFormPage = () => {
+export interface AddTaskPopUpProps {
+  isVisble: boolean;
+  onClose: () => void;
+}
+
+export function AddTaskPopUp(props: AddTaskPopUpProps) {
+  const { isVisble, onClose } = props;
   const { showToast } = useToast();
-  const navigate = useNavigate();
   const { loading, data } = useQuery(GET_TASK_STATUSES, {
     onError: (error) => {
       showToast('error', error.message, {
@@ -35,7 +35,8 @@ export const TaskFormPage = () => {
         showToast('success', 'Task created successfully', {
           toastId: 'task-created',
         });
-        navigate('/');
+
+        onClose();
       },
     });
   };
@@ -69,15 +70,10 @@ export const TaskFormPage = () => {
   };
 
   return (
-    <PageLayout>
-      <PageHeader title="Add Task">
-        <ButtonLink to="/">
-          <ChevronLeftIcon className="w-5 h-5" />
-          <span>Back</span>
-        </ButtonLink>
-      </PageHeader>
-
-      <div className="mt-6 flex flex-1">{renderContent()}</div>
-    </PageLayout>
+    <Modal title="Add Task 📑" isOpen={isVisble} onClose={onClose}>
+      {renderContent()}
+    </Modal>
   );
-};
+}
+
+export default AddTaskPopUp;
