@@ -3,5 +3,6 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "tailwindCSS.experimental.classRegex": [
     "clsx\\(([^)]+)\\)" // clsx('text-red-500', 'bg-blue-500')
-  ]
+  ],
+  "tailwindCSS.lint.cssConflict": "ignore"
 }

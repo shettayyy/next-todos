@@ -1,5 +1,11 @@
 import 'react-toastify/dist/ReactToastify.css';
-import { Slide, toast, ToastContent, ToastOptions } from 'react-toastify';
+import {
+  Slide,
+  toast as toastify,
+  ToastContent,
+  ToastOptions,
+  toast,
+} from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import {
   createContext,
@@ -8,6 +14,7 @@ import {
   useCallback,
   useContext,
 } from 'react';
+import { createPortal } from 'react-dom';
 
 type ToastType = 'success' | 'error' | 'info' | 'warning' | 'default';
 
@@ -17,10 +24,12 @@ interface ToastProviderProps {
     content: ToastContent,
     options?: Partial<ToastOptions>
   ) => void;
+  toast: typeof toastify;
 }
 
 const ToastContext = createContext<ToastProviderProps>({
   showToast: () => null,
+  toast: toastify,
 });
 
 export const defaultToastOptions: ToastOptions = {
@@ -34,6 +43,8 @@ export const defaultToastOptions: ToastOptions = {
   theme: 'colored',
   transition: Slide,
 };
+
+const toastRoot = document.getElementById('toast-root');
 
 export const ToastProvider: FC<PropsWithChildren> = ({ children }) => {
   /**
@@ -70,10 +81,19 @@ export const ToastProvider: FC<PropsWithChildren> = ({ children }) => {
     <ToastContext.Provider
       value={{
         showToast,
+        toast: toastify,
       }}
     >
       {children}
-      <ToastContainer limit={3} />
+      {toastRoot &&
+        createPortal(
+          <ToastContainer
+            limit={3}
+            className="z-50"
+            {...defaultToastOptions}
+          />,
+          toastRoot
+        )}
     </ToastContext.Provider>
   );
 };

@@ -53,7 +53,7 @@ export const Radiobox = forwardRef<HTMLInputElement, RadioboxProps>(
     const { options, error, ...restProps } = props;
 
     return (
-      <fieldset className="space-y-2">
+      <fieldset className="flex flex-col gap-2">
         <div className="flex flex-wrap justify-center gap-2">
           <legend className="sr-only">Color</legend>
 

@@ -6,8 +6,8 @@ import {
   Radiobox,
   Textarea,
 } from '@task-master/shared/ui/component/core';
-import { FC } from 'react';
-import { useForm } from 'react-hook-form';
+import { FC, useEffect } from 'react';
+import { UseFormGetValues, useForm } from 'react-hook-form';
 
 export type TaskForm = CreateTaskInput;
 
@@ -48,6 +48,8 @@ export interface TaskFormProps {
    */
   onSubmit: (data: TaskForm) => void;
   submitting?: boolean;
+  getValues?: () => TaskForm;
+  attachGetValues?: (getValuesFn: UseFormGetValues<CreateTaskInput>) => void;
 }
 
 export const TaskForm: FC<TaskFormProps> = (props) => {
@@ -56,11 +58,13 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
     onSubmit,
     submitLabel = 'Submit',
     submitting = false,
+    attachGetValues,
   } = props;
   const {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<TaskForm>({
     defaultValues: {
       title: '',
@@ -69,9 +73,13 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
     },
   });
 
+  useEffect(() => {
+    attachGetValues?.(getValues);
+  }, [attachGetValues, getValues]);
+
   return (
     <form
-      className="space-y-6 m-auto w-56 md:w-96 justify-center items-center"
+      className="space-y-4 m-auto w-56 md:w-96 justify-center items-center"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Radiobox
@@ -104,25 +112,33 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
         error={errors.description?.message}
       />
 
-      <Button
-        className="w-full items-center justify-center flex gap-4"
-        type="submit"
-        disabled={submitting}
-      >
-        {submitting ? (
-          <div className="flex items-center justify-center gap-2">
-            <ArrowPathIcon className="w-5 h-5 animate-spin" />
+      <div className="flex gap-2 md:gap-4">
+        <Button
+          className="w-full items-center justify-center"
+          disabled={submitting}
+        >
+          Cancel
+        </Button>
+        <Button
+          className="w-full items-center justify-center flex gap-4"
+          type="submit"
+          disabled={submitting}
+        >
+          {submitting ? (
+            <div className="flex items-center justify-center gap-2">
+              <ArrowPathIcon className="w-5 h-5 animate-spin" />
 
-            <span>Adding your task...</span>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center gap-2">
-            <PlusIcon className="w-5 h-5" />
+              <span>Adding your task...</span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-2">
+              <PlusIcon className="w-5 h-5" />
 
-            <span>{submitLabel}</span>
-          </div>
-        )}
-      </Button>
+              <span>{submitLabel}</span>
+            </div>
+          )}
+        </Button>
+      </div>
     </form>
   );
 };

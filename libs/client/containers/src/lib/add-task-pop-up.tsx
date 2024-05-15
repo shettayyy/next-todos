@@ -6,7 +6,11 @@ import {
   CreateTaskInput,
   GET_TASK_STATUSES,
 } from '@task-master/client/graphql';
-import { Button, Modal } from '@task-master/shared/ui/component/core';
+import {
+  Button,
+  ConfirmToast,
+  Modal,
+} from '@task-master/shared/ui/component/core';
 import { useMemo } from 'react';
 
 export interface AddTaskPopUpProps {
@@ -16,7 +20,7 @@ export interface AddTaskPopUpProps {
 
 export function AddTaskPopUp(props: AddTaskPopUpProps) {
   const { isVisble, onClose } = props;
-  const { showToast } = useToast();
+  const { showToast, toast } = useToast();
   const { loading, data } = useQuery(GET_TASK_STATUSES, {
     onError: (error) => {
       showToast('error', error.message, {
@@ -25,6 +29,36 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
     },
   });
   const taskStatuses = data?.taskStatuses;
+
+  // const handleOnClose = () => {
+  //   const hasUnsavedChanges =
+  //     !!getValues.current?.() &&
+  //     Object.values(getValues.current?.()).some(Boolean);
+
+  //   if (hasUnsavedChanges) {
+  //     toast(
+  //       (props) => (
+  //         <ConfirmToast
+  //           onYes={() => {
+  //             onClose();
+  //             props.closeToast();
+  //           }}
+  //           onNo={props.closeToast}
+  //         />
+  //       ),
+  //       {
+  //         type: 'warning',
+  //         autoClose: false,
+  //         draggable: false,
+  //         closeButton: false,
+  //         icon: false,
+  //         toastId: 'unsaved-changes',
+  //       }
+  //     );
+  //   } else {
+  //     onClose();
+  //   }
+  // };
 
   const options = useMemo(() => {
     if (!taskStatuses?.length) {
@@ -83,7 +117,7 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
   };
 
   return (
-    <Modal title="Add Task 📑" isOpen={isVisble} onClose={onClose}>
+    <Modal title="Add Task 📑" isOpen={isVisble}>
       {renderContent()}
     </Modal>
   );

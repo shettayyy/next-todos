@@ -9,11 +9,11 @@ import { FC, PropsWithChildren } from 'react';
 export interface ModalProps extends PropsWithChildren {
   title: string;
   isOpen: boolean;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 export const Modal: FC<ModalProps> = (props) => {
-  const { isOpen, onClose, children, title } = props;
+  const { isOpen, onClose = () => null, children, title } = props;
 
   return (
     <Transition

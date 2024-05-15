@@ -12,7 +12,7 @@ export const Textarea: FC<TextareaProps> = forwardRef<
   TextareaProps
 >((props, ref) => {
   return (
-    <fieldset className="space-y-2">
+    <fieldset className="flex flex-col gap-2">
       <div>
         <label htmlFor={props.id} className={clsx('block text-xs')}>
           {props.label}

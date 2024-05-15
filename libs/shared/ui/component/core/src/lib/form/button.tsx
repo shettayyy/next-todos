@@ -6,7 +6,7 @@ export interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  variant?: 'primary' | 'danger' | 'success';
+  variant?: 'primary' | 'danger' | 'success' | 'default';
 }
 
 export const Button: FC<ButtonProps> = forwardRef<
@@ -19,10 +19,11 @@ export const Button: FC<ButtonProps> = forwardRef<
     <button
       ref={ref}
       className={clsx(
-        'border border-transparent shadow-sm bg-slate-100 text-black rounded-md p-2 mt-4 focus:outline-none hover:scale-105 transition-all',
+        'border border-transparent shadow-sm text-black rounded-md p-2 focus:outline-none hover:text-white hover:scale-105 transition-all text-sm',
         {
           'bg-slate-100 hover:bg-orange-400': variant === 'primary',
-          'bg-red-500 hover:bg-red-600': variant === 'danger',
+          'bg-slate-100 hover:text-black': variant === 'default',
+          'bg-red-500 text-white hover:bg-red-600': variant === 'danger',
           'bg-green-500 hover:bg-green-600': variant === 'success',
           'cursor-not-allowed opacity-50': props.disabled,
         },

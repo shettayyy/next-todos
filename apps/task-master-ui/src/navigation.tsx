@@ -60,7 +60,9 @@ export const Navigation = () => {
         <span role="img" aria-label="Rocket" className="text-4xl animate-pulse">
           🚀
         </span>
-        <p>Initializing productivity blast-off sequence...</p>
+        <p className="text-center">
+          Initializing productivity blast-off sequence...
+        </p>
       </Container>
     );
   }
