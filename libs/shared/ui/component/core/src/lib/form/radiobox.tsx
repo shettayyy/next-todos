@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { forwardRef } from 'react';
 
 export interface RadioboxProps {
@@ -60,7 +61,12 @@ export const Radiobox = forwardRef<HTMLInputElement, RadioboxProps>(
             <label
               key={option.value}
               htmlFor={option.value}
-              className="flex cursor-pointer items-center justify-center rounded-md bg-white px-2 md:px-4 py-2 text-gray-900 hover:bg-orange-300 transition-all duration-200 ease-in-out has-[:checked]:border-orange-400 has-[:checked]:bg-orange-400"
+              className={clsx(
+                'flex cursor-pointer items-center justify-center rounded-md bg-white px-2 md:px-4 py-2 text-gray-900 hover:bg-orange-300 transition-all duration-200 ease-in-out has-[:checked]:border-orange-400 has-[:checked]:bg-orange-400',
+                {
+                  'border-red-500 border': !!error,
+                }
+              )}
             >
               <input
                 type="radio"

@@ -1,21 +1,21 @@
 import { ArrowPathIcon, PlusIcon } from '@heroicons/react/20/solid';
-import { CreateTaskInput, TaskStatus } from '@task-master/client/graphql';
+import { CreateTaskInput } from '@task-master/client/graphql';
 import {
   Button,
   Input,
   Radiobox,
   Textarea,
 } from '@task-master/shared/ui/component/core';
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 
 export type TaskForm = CreateTaskInput;
 
 export interface TaskFormProps {
   /**
-   * List of task statuses
+   * List of options for task status
    *
-   * @type TaskStatus[]
+   * @type {Array<{ value: unknown; label: string }>}
    * @default []
    *
    * @example
@@ -26,10 +26,13 @@ export interface TaskFormProps {
    *  { value: 3, label: 'Done' },
    * ];
    *
-   * <TaskForm taskStatuses={taskStatuses} />
+   * <TaskForm options={taskStatuses} />
    * ```
    */
-  taskStatuses: TaskStatus[];
+  options: {
+    value: string;
+    label: string;
+  }[];
   /**
    * Submit button label
    * @default 'Submit'
@@ -49,7 +52,7 @@ export interface TaskFormProps {
 
 export const TaskForm: FC<TaskFormProps> = (props) => {
   const {
-    taskStatuses,
+    options,
     onSubmit,
     submitLabel = 'Submit',
     submitting = false,
@@ -62,16 +65,9 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
     defaultValues: {
       title: '',
       description: '',
-      status: taskStatuses[0].id,
+      status: '',
     },
   });
-
-  const opions = useMemo(() => {
-    return taskStatuses.map((status) => ({
-      value: status.id,
-      label: status.status,
-    }));
-  }, [taskStatuses]);
 
   return (
     <form
@@ -79,7 +75,7 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <Radiobox
-        options={opions}
+        options={options}
         {...register('status', {
           required: 'Status is required',
         })}
@@ -92,6 +88,7 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
           required: 'Title is required',
           maxLength: { value: 100, message: 'Title is too long' },
         })}
+        id="title"
         placeholder='e.g. "Create a new project"'
         error={errors.title?.message}
       />
@@ -102,6 +99,7 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
           required: 'Description is required',
           maxLength: { value: 1000, message: 'Description is too long' },
         })}
+        id="description"
         placeholder='e.g. "Create a new project with the following features..."'
         error={errors.description?.message}
       />

@@ -7,6 +7,7 @@ import {
   GET_TASK_STATUSES,
 } from '@task-master/client/graphql';
 import { Button, Modal } from '@task-master/shared/ui/component/core';
+import { useMemo } from 'react';
 
 export interface AddTaskPopUpProps {
   isVisble: boolean;
@@ -23,6 +24,18 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
       });
     },
   });
+  const taskStatuses = data?.taskStatuses;
+
+  const options = useMemo(() => {
+    if (!taskStatuses?.length) {
+      return [];
+    }
+
+    return taskStatuses.map((status) => ({
+      value: status.id,
+      label: status.status,
+    }));
+  }, [taskStatuses]);
 
   const [createTask, { loading: submitting }] = useMutation(CREATE_TASK);
 
@@ -46,13 +59,13 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
       return <div>Loading...</div>;
     }
 
-    if (!data?.taskStatuses || !data.taskStatuses.length) {
+    if (!taskStatuses?.length) {
       return (
         <div className="text-red-600 justify-center items-center flex flex-col flex-1">
-          <span>
-            We couldn't fetch the list of task statuses. Please refresh the
-            page.
-          </span>
+          <p className="text-center">
+            We couldn't fetch the list of task statuses.
+            <br /> Please refresh the page.
+          </p>
 
           <Button onClick={() => window.location.reload()}>Refresh</Button>
         </div>
@@ -64,7 +77,7 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
         submitLabel="Add Task"
         onSubmit={onSubmit}
         submitting={submitting}
-        taskStatuses={data.taskStatuses}
+        options={options}
       />
     );
   };
