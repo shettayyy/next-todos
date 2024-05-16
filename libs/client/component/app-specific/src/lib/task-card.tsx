@@ -4,7 +4,7 @@ import { memo } from 'react';
 
 export interface TaskCardProps {
   task: Task;
-  renderAction?: (task: Task) => React.ReactNode;
+  renderActionMenu?: (task: Task) => React.ReactNode;
 }
 
 export const TaskCard: React.FC<TaskCardProps> = memo((props) => {
@@ -37,7 +37,7 @@ export const TaskCard: React.FC<TaskCardProps> = memo((props) => {
         <div className="flex justify-between items-center mb-2">
           <span className="text-orange-400 text-xs">{formattedDate}</span>
 
-          {props.renderAction?.(task)}
+          {props.renderActionMenu?.(task)}
         </div>
 
         <h3 className="text-lg font-medium mb-1">{title}</h3>

@@ -1,6 +1,6 @@
 import { PageHeader } from '@task-master/client/component/layout';
 import { PageLayout } from '@task-master/shared/ui/component/layout';
-import { ArrowPathIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { PlusIcon } from '@heroicons/react/20/solid';
 import { useMutation, useQuery } from '@apollo/client';
 import {
   CREATE_TASK,
@@ -9,19 +9,17 @@ import {
   GET_TASKS,
   Task,
 } from '@task-master/client/graphql';
-import { TaskCard } from '@task-master/client/component/app-specific';
 import { useToast } from '@task-master/client/context';
 import {
   Button,
   ConfirmModal,
   DotMenuIcon,
-  InfiniteScroll,
 } from '@task-master/shared/ui/component/core';
 import { useToggle } from '@task-master/shared/ui/hooks';
 import { AddTaskPopUp } from '@task-master/client/containers';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { useCallback, useState } from 'react';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import { TaskList } from '@task-master/client/component/app-specific';
 
 const LIMIT = 40;
 
@@ -127,83 +125,24 @@ export const Tasks = () => {
     });
   };
 
-  const renderAction = (task: Task) => () =>
-    (
-      <Popover className="relative">
-        <PopoverButton className="focus:outline-none hover:scale-125 transition-all">
-          <DotMenuIcon className="w-5 h-5" />
-        </PopoverButton>
+  const renderAction = (task: Task) => (
+    <Popover className="relative">
+      <PopoverButton className="focus:outline-none hover:scale-125 transition-all">
+        <DotMenuIcon className="w-5 h-5" />
+      </PopoverButton>
 
-        <PopoverPanel className="absolute right-0 mt-2 w-48 bg-neutral-700 border-2 border-neutral-600 rounded shadow-lg">
-          <ul>
-            <li
-              onClick={onDeleteToggle(task.id)}
-              className="block px-4 py-2 text-neutral-200 hover:bg-neutral-600 cursor-pointer"
-            >
-              Delete
-            </li>
-          </ul>
-        </PopoverPanel>
-      </Popover>
-    );
-
-  const renderContent = () => {
-    if (loading && !data) {
-      return (
-        <div className="justify-center flex items-center flex-1 animate-spin">
-          <ArrowPathIcon className="w-12 h-w-12" />
-        </div>
-      );
-    }
-
-    if (!data?.tasks?.result?.length) {
-      return (
-        <div className="flex flex-col gap-6 flex-1 justify-center items-center">
-          <div className="flex flex-col gap-2 justify-center items-center">
-            <h4 className="text-2xl text-orange-400">
-              No tasks found!
-              <span className="ml-2" role="img" aria-label="Sad face">
-                🥺
-              </span>
-            </h4>
-            <p className="text-neutral-300 text-center">
-              Create a new task to get started
-            </p>
-          </div>
-
-          <Button onClick={toggle} className="flex items-center">
-            <PlusIcon className="w-5 h-5" />
-
-            <span>Create a new task</span>
-          </Button>
-        </div>
-      );
-    }
-
-    const { result } = data.tasks;
-
-    return (
-      <>
-        <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
-          <Masonry gutter="2rem">
-            {result.map((item) => (
-              <TaskCard
-                key={item.id}
-                task={item as Task}
-                renderAction={renderAction(item as Task)}
-              />
-            ))}
-          </Masonry>
-        </ResponsiveMasonry>
-
-        {loading && (
-          <ArrowPathIcon className="w-12 h-w-12 py-4 animate-spin self-center" />
-        )}
-
-        <InfiniteScroll threshold={0.5} onIntersect={handleIntersect} />
-      </>
-    );
-  };
+      <PopoverPanel className="absolute right-0 mt-2 w-48 bg-neutral-700 border-2 border-neutral-600 rounded shadow-lg">
+        <ul>
+          <li
+            onClick={onDeleteToggle(task.id)}
+            className="block px-4 py-2 text-neutral-200 hover:bg-neutral-600 cursor-pointer"
+          >
+            Delete
+          </li>
+        </ul>
+      </PopoverPanel>
+    </Popover>
+  );
 
   return (
     <PageLayout className="space-y-8">
@@ -215,7 +154,13 @@ export const Tasks = () => {
         </Button>
       </PageHeader>
 
-      {renderContent()}
+      <TaskList
+        data={data?.tasks?.result as Task[]}
+        loading={loading}
+        handleIntersect={handleIntersect}
+        renderActionMenu={renderAction}
+        toggle={toggle}
+      />
 
       <AddTaskPopUp
         isVisble={isAddTaskModalOpen}
