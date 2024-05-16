@@ -1,8 +1,7 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { TaskForm } from '@task-master/client/component/app-specific';
 import { useToast } from '@task-master/client/context';
 import {
-  CREATE_TASK,
   CreateTaskInput,
   GET_TASK_STATUSES,
 } from '@task-master/client/graphql';
@@ -16,10 +15,12 @@ import { useMemo } from 'react';
 export interface AddTaskPopUpProps {
   isVisble: boolean;
   onClose: () => void;
+  onSubmit: (data: CreateTaskInput) => void;
+  submitting?: boolean;
 }
 
 export function AddTaskPopUp(props: AddTaskPopUpProps) {
-  const { isVisble, onClose } = props;
+  const { isVisble, onClose, onSubmit, submitting = false } = props;
   const { showToast, toast } = useToast();
   const { loading, data } = useQuery(GET_TASK_STATUSES, {
     onError: (error) => {
@@ -68,23 +69,6 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
       label: status.status,
     }));
   }, [taskStatuses]);
-
-  const [createTask, { loading: submitting }] = useMutation(CREATE_TASK);
-
-  const onSubmit = (data: CreateTaskInput) => {
-    createTask({
-      variables: {
-        input: data,
-      },
-      onCompleted: () => {
-        showToast('success', 'Task created successfully', {
-          toastId: 'task-created',
-        });
-
-        onClose();
-      },
-    });
-  };
 
   const renderContent = () => {
     if (loading) {

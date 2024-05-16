@@ -1,28 +1,76 @@
 import { PageHeader } from '@task-master/client/component/layout';
 import { PageLayout } from '@task-master/shared/ui/component/layout';
-import { PlusIcon } from '@heroicons/react/20/solid';
+import { ArrowPathIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { useMutation, useQuery } from '@apollo/client';
-import { DELETE_TASK, GET_TASKS, Task } from '@task-master/client/graphql';
+import {
+  CREATE_TASK,
+  CreateTaskInput,
+  DELETE_TASK,
+  GET_TASKS,
+  Task,
+} from '@task-master/client/graphql';
 import { TaskCard } from '@task-master/client/component/app-specific';
 import { useToast } from '@task-master/client/context';
 import {
   Button,
   ConfirmModal,
   DotMenuIcon,
+  InfiniteScroll,
 } from '@task-master/shared/ui/component/core';
 import { useToggle } from '@task-master/shared/ui/hooks';
 import { AddTaskPopUp } from '@task-master/client/containers';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+
+const LIMIT = 40;
 
 export const Tasks = () => {
   const { showToast } = useToast();
-  const { data, loading, refetch } = useQuery(GET_TASKS);
-  const [deleteTask, { loading: deleting }] = useMutation(DELETE_TASK);
+
   const [isAddTaskModalOpen, toggle] = useToggle(false);
   const [deleteTaskId, setDeleteTaskId] = useState<string | undefined>(
     undefined
   );
+
+  // Get tasks query to fetch tasks
+  const { data, loading, fetchMore, refetch } = useQuery(GET_TASKS, {
+    variables: {
+      input: {
+        page: 1,
+        limit: LIMIT,
+        filter: {
+          search: '',
+          status: '',
+        },
+      },
+    },
+    notifyOnNetworkStatusChange: true,
+  });
+
+  // Delete task mutation to delete a task
+  const [deleteTask, { loading: deleting }] = useMutation(DELETE_TASK);
+
+  // Create task mutation to create a new task
+  const [createTask, { loading: submitting }] = useMutation(CREATE_TASK);
+
+  const onSubmit = (data: CreateTaskInput) => {
+    createTask({
+      variables: {
+        input: data,
+      },
+      onCompleted: () => {
+        showToast('success', 'Task created successfully', {
+          toastId: 'task-created',
+        });
+
+        refetch();
+
+        toggle();
+      },
+    });
+  };
+
+  const nextPage = data?.tasks?.metadata.pagination.nextPage;
 
   const onDeleteToggle = (id?: string) => () =>
     setDeleteTaskId((prev) => {
@@ -32,6 +80,40 @@ export const Tasks = () => {
 
       return id;
     });
+
+  const handleIntersect = useCallback(() => {
+    if (!loading && nextPage) {
+      fetchMore({
+        variables: {
+          input: {
+            page: nextPage,
+            limit: LIMIT,
+            filter: {
+              search: '',
+              status: '',
+            },
+          },
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+
+          if (!fetchMoreResult.tasks?.result?.length) {
+            return prev;
+          }
+
+          return {
+            tasks: {
+              ...fetchMoreResult.tasks,
+              result: [
+                ...(prev.tasks?.result ?? []),
+                ...fetchMoreResult.tasks.result,
+              ],
+            },
+          };
+        },
+      });
+    }
+  }, [nextPage, fetchMore, loading]);
 
   const onDelete = (id: string) => () => {
     deleteTask({
@@ -66,9 +148,9 @@ export const Tasks = () => {
     );
 
   const renderContent = () => {
-    if (loading) {
-      return <div>Loading...</div>;
-    }
+    // if (loading && !data) {
+    //   return <div>Loading...</div>;
+    // }
 
     if (!data?.tasks?.result?.length) {
       return <div>No tasks found</div>;
@@ -77,15 +159,21 @@ export const Tasks = () => {
     const { result } = data.tasks;
 
     return (
-      <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {result.map((item) => (
-          <TaskCard
-            key={item.id}
-            task={item as Task}
-            renderAction={renderAction(item as Task)}
-          />
-        ))}
-      </ul>
+      <>
+        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {result.map((item) => (
+            <TaskCard
+              key={item.id}
+              task={item as Task}
+              renderAction={renderAction(item as Task)}
+            />
+          ))}
+        </ul>
+
+        <InfiniteScroll onIntersect={handleIntersect} />
+
+        {loading && <ArrowPathIcon className="w-10 h-10 py-4 animate-spin" />}
+      </>
     );
   };
 
@@ -101,7 +189,12 @@ export const Tasks = () => {
 
       {renderContent()}
 
-      <AddTaskPopUp isVisble={isAddTaskModalOpen} onClose={toggle} />
+      <AddTaskPopUp
+        isVisble={isAddTaskModalOpen}
+        onClose={toggle}
+        submitting={submitting}
+        onSubmit={onSubmit}
+      />
 
       <ConfirmModal
         isOpen={!!deleteTaskId}

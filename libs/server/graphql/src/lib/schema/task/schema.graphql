@@ -74,7 +74,7 @@ input TaskParams {
   """
   The filter of the task list
   """
-  filter: TaskFilter!
+  filter: TaskFilter
   """
   The sort of the task list
   """
