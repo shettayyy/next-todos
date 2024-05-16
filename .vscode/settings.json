@@ -2,7 +2,6 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "tailwindCSS.experimental.classRegex": [
-    "clsx\\(([^)]+)\\)" // clsx('text-red-500', 'bg-blue-500')
-  ],
-  "tailwindCSS.lint.cssConflict": "ignore"
+    "clsx\\('([^']+)',?'([^']+)',?(?:'(.*)?)?'\\)" // clsx('a', 'b', 'c')
+  ]
 }

@@ -7,7 +7,7 @@ import {
   Textarea,
 } from '@task-master/shared/ui/component/core';
 import { FC, useEffect } from 'react';
-import { UseFormGetValues, useForm } from 'react-hook-form';
+import { Controller, UseFormGetValues, useForm } from 'react-hook-form';
 
 export type TaskForm = CreateTaskInput;
 
@@ -49,7 +49,8 @@ export interface TaskFormProps {
   onSubmit: (data: TaskForm) => void;
   submitting?: boolean;
   getValues?: () => TaskForm;
-  attachGetValues?: (getValuesFn: UseFormGetValues<CreateTaskInput>) => void;
+  shareGetValuesFn?: (getValuesFn: UseFormGetValues<CreateTaskInput>) => void;
+  onCancel?: (values: CreateTaskInput) => void;
 }
 
 export const TaskForm: FC<TaskFormProps> = (props) => {
@@ -58,14 +59,10 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
     onSubmit,
     submitLabel = 'Submit',
     submitting = false,
-    attachGetValues,
+    shareGetValuesFn,
+    onCancel,
   } = props;
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    getValues,
-  } = useForm<TaskForm>({
+  const { handleSubmit, getValues, control } = useForm<TaskForm>({
     defaultValues: {
       title: '',
       description: '',
@@ -73,49 +70,75 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
     },
   });
 
+  const handleCancel = () => {
+    onCancel?.(getValues());
+  };
+
   useEffect(() => {
-    attachGetValues?.(getValues);
-  }, [attachGetValues, getValues]);
+    shareGetValuesFn?.(getValues);
+  }, [shareGetValuesFn, getValues]);
 
   return (
     <form
       className="space-y-4 m-auto w-56 md:w-96 justify-center items-center"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <Radiobox
-        options={options}
-        {...register('status', {
-          required: 'Status is required',
-        })}
-        error={errors.status?.message}
+      <Controller
+        name="status"
+        control={control}
+        render={({ field, formState: { errors } }) => (
+          <Radiobox
+            options={options}
+            {...field}
+            error={errors.status?.message}
+          />
+        )}
+        rules={{ required: 'Status is required' }}
       />
 
-      <Input
-        label="Title"
-        {...register('title', {
+      <Controller
+        name="title"
+        control={control}
+        render={({ field, formState: { errors } }) => (
+          <Input
+            label="Title"
+            {...field}
+            id="title"
+            placeholder='e.g. "Create a new project"'
+            error={errors.title?.message}
+          />
+        )}
+        rules={{
           required: 'Title is required',
           maxLength: { value: 100, message: 'Title is too long' },
-        })}
-        id="title"
-        placeholder='e.g. "Create a new project"'
-        error={errors.title?.message}
+        }}
       />
 
-      <Textarea
-        label="Description"
-        {...register('description', {
+      <Controller
+        name="description"
+        control={control}
+        render={({ field, formState: { errors } }) => (
+          <Textarea
+            label="Description"
+            {...field}
+            id="description"
+            placeholder='e.g. "Create a new project for the client"'
+            error={errors.description?.message}
+          />
+        )}
+        rules={{
           required: 'Description is required',
-          maxLength: { value: 1000, message: 'Description is too long' },
-        })}
-        id="description"
-        placeholder='e.g. "Create a new project with the following features..."'
-        error={errors.description?.message}
+          maxLength: { value: 200, message: 'Description is too long' },
+        }}
       />
 
       <div className="flex gap-2 md:gap-4">
         <Button
           className="w-full items-center justify-center"
           disabled={submitting}
+          onClick={handleCancel}
+          variant="default"
+          type="button"
         >
           Cancel
         </Button>

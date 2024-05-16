@@ -8,7 +8,7 @@ export interface ConfirmToastProps {
 }
 
 export const ConfirmToast: FC<ConfirmToastProps> = ({ onYes, onNo }) => (
-  <div className="flex flex-col items-center space-x-2">
+  <div className="flex flex-col items-center gap-2">
     <div className="flex items-center gap-2">
       <ExclamationTriangleIcon className="w-12 h-12 text-white" />
 

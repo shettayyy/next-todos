@@ -30,35 +30,33 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
   });
   const taskStatuses = data?.taskStatuses;
 
-  // const handleOnClose = () => {
-  //   const hasUnsavedChanges =
-  //     !!getValues.current?.() &&
-  //     Object.values(getValues.current?.()).some(Boolean);
+  const handleOnClose = (values: CreateTaskInput) => {
+    const hasUnsavedChanges = Object.values(values).some(Boolean);
 
-  //   if (hasUnsavedChanges) {
-  //     toast(
-  //       (props) => (
-  //         <ConfirmToast
-  //           onYes={() => {
-  //             onClose();
-  //             props.closeToast();
-  //           }}
-  //           onNo={props.closeToast}
-  //         />
-  //       ),
-  //       {
-  //         type: 'warning',
-  //         autoClose: false,
-  //         draggable: false,
-  //         closeButton: false,
-  //         icon: false,
-  //         toastId: 'unsaved-changes',
-  //       }
-  //     );
-  //   } else {
-  //     onClose();
-  //   }
-  // };
+    if (hasUnsavedChanges) {
+      toast(
+        (props) => (
+          <ConfirmToast
+            onYes={() => {
+              onClose();
+              props.closeToast();
+            }}
+            onNo={props.closeToast}
+          />
+        ),
+        {
+          type: 'warning',
+          autoClose: false,
+          draggable: false,
+          closeButton: false,
+          icon: false,
+          toastId: 'unsaved-changes',
+        }
+      );
+    } else {
+      onClose();
+    }
+  };
 
   const options = useMemo(() => {
     if (!taskStatuses?.length) {
@@ -112,6 +110,7 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
         onSubmit={onSubmit}
         submitting={submitting}
         options={options}
+        onCancel={handleOnClose}
       />
     );
   };
