@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 import { forwardRef } from 'react';
 
-export interface RadioboxProps {
+export interface RadioboxProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   /**
    * Array of options
    *
@@ -69,12 +70,12 @@ export const Radiobox = forwardRef<HTMLInputElement, RadioboxProps>(
               )}
             >
               <input
+                {...restProps}
                 type="radio"
                 value={option.value}
                 id={option.value}
                 className="sr-only"
                 ref={ref}
-                {...restProps}
               />
 
               <p className="text-xs md:text-sm font-medium">{option.label}</p>
