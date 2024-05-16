@@ -90,7 +90,7 @@ TaskSchema.pre('validate', function (next) {
   }
 
   // Description should be at most 1000 characters
-  if (this.description.length > 1000) {
+  if (this.description.length > 5000) {
     next(
       new GraphQLError('Description should be at most 1000 characters', {
         extensions: {

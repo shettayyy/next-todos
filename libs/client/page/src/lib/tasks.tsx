@@ -21,6 +21,7 @@ import { useToggle } from '@task-master/shared/ui/hooks';
 import { AddTaskPopUp } from '@task-master/client/containers';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { useCallback, useState } from 'react';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 
 const LIMIT = 40;
 
@@ -67,6 +68,7 @@ export const Tasks = () => {
 
         toggle();
       },
+      onError: (error) => showToast('error', (error as Error).message),
     });
   };
 
@@ -95,9 +97,7 @@ export const Tasks = () => {
           },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
-
-          if (!fetchMoreResult.tasks?.result?.length) {
+          if (!fetchMoreResult?.tasks?.result?.length) {
             return prev;
           }
 
@@ -148,31 +148,59 @@ export const Tasks = () => {
     );
 
   const renderContent = () => {
-    // if (loading && !data) {
-    //   return <div>Loading...</div>;
-    // }
+    if (loading && !data) {
+      return (
+        <div className="justify-center flex items-center flex-1 animate-spin">
+          <ArrowPathIcon className="w-12 h-w-12" />
+        </div>
+      );
+    }
 
     if (!data?.tasks?.result?.length) {
-      return <div>No tasks found</div>;
+      return (
+        <div className="flex flex-col gap-6 flex-1 justify-center items-center">
+          <div className="flex flex-col gap-2 justify-center items-center">
+            <h4 className="text-2xl text-orange-400">
+              No tasks found!
+              <span className="ml-2" role="img" aria-label="Sad face">
+                🥺
+              </span>
+            </h4>
+            <p className="text-neutral-300 text-center">
+              Create a new task to get started
+            </p>
+          </div>
+
+          <Button onClick={toggle} className="flex items-center">
+            <PlusIcon className="w-5 h-5" />
+
+            <span>Create a new task</span>
+          </Button>
+        </div>
+      );
     }
 
     const { result } = data.tasks;
 
     return (
       <>
-        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {result.map((item) => (
-            <TaskCard
-              key={item.id}
-              task={item as Task}
-              renderAction={renderAction(item as Task)}
-            />
-          ))}
-        </ul>
+        <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
+          <Masonry gutter="2rem">
+            {result.map((item) => (
+              <TaskCard
+                key={item.id}
+                task={item as Task}
+                renderAction={renderAction(item as Task)}
+              />
+            ))}
+          </Masonry>
+        </ResponsiveMasonry>
 
-        <InfiniteScroll onIntersect={handleIntersect} />
+        {loading && (
+          <ArrowPathIcon className="w-12 h-w-12 py-4 animate-spin self-center" />
+        )}
 
-        {loading && <ArrowPathIcon className="w-10 h-10 py-4 animate-spin" />}
+        <InfiniteScroll threshold={0.5} onIntersect={handleIntersect} />
       </>
     );
   };

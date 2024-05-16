@@ -111,6 +111,7 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
         rules={{
           required: 'Title is required',
           maxLength: { value: 100, message: 'Title is too long' },
+          minLength: { value: 3, message: 'Title is too short' },
         }}
       />
 
@@ -128,7 +129,8 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
         )}
         rules={{
           required: 'Description is required',
-          maxLength: { value: 200, message: 'Description is too long' },
+          maxLength: { value: 5000, message: 'Description is too long' },
+          minLength: { value: 10, message: 'Description is too short' },
         }}
       />
 

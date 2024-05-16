@@ -22,7 +22,7 @@ export const TaskCard: React.FC<TaskCardProps> = memo((props) => {
   );
 
   return (
-    <li>
+    <div>
       <span
         className={clsx('px-3 py-1 text-xs font-semibold', {
           'bg-blue-100 text-blue-800': taskStatus.status === 'To Do',
@@ -43,6 +43,6 @@ export const TaskCard: React.FC<TaskCardProps> = memo((props) => {
         <h3 className="text-lg font-medium mb-1">{title}</h3>
         <p className="text-neutral-400 text-sm capitalize">{description}</p>
       </div>
-    </li>
+    </div>
   );
 });

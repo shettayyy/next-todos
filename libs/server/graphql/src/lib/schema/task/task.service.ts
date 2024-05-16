@@ -9,7 +9,7 @@ import {
   TaskParams,
 } from '../types.generated';
 import { handleGraphQLError } from '@task-master/shared/utils';
-import { UpdateQuery } from 'mongoose';
+import mongoose, { UpdateQuery } from 'mongoose';
 
 export const taskService = {
   /**
@@ -263,23 +263,24 @@ export const taskService = {
    */
   cloneTasks: async (userId: string): Promise<boolean> => {
     try {
-      const task = await TaskModel.findOne({ userId });
-
-      if (!task) {
-        throw new GraphQLError('Task not found', {
-          extensions: {
-            code: ErrorCode.TaskNotFound,
-          },
-        });
-      }
-
       const tasks = Array.from({ length: 400 }, (_, index) => ({
-        ...task.toObject(),
-        title: `${task.title} - ${index + 5}`,
-        _id: undefined,
+        _id: new mongoose.Types.ObjectId(),
+        title: `Task ${index + 1}`,
+        description: `Task description ${index + 1}`,
+        // Random status ID to choose from 6642596955c5a701cafe6b24, 6642597155c5a701cafe6b30, 6642597e55c5a701cafe6b3e
+        userId,
+        status:
+          index % 3 === 0
+            ? '6642596955c5a701cafe6b24'
+            : index % 2 === 0
+            ? '6642597155c5a701cafe6b30'
+            : '6642597e55c5a701cafe6b3e',
+        // Add index to add days to the current date
+        createdAt: new Date(new Date().setDate(new Date().getDate() + index)),
+        updatedAt: new Date(new Date().setDate(new Date().getDate() + index)),
       }));
 
-      await TaskModel.insertMany(tasks);
+      await TaskModel.insertMany(tasks, { ordered: true });
 
       return true;
     } catch (error) {
