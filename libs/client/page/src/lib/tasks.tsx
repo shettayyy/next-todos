@@ -8,6 +8,7 @@ import {
   DELETE_TASK,
   GET_TASKS,
   Task,
+  UPDATE_TASK,
 } from '@task-master/client/graphql';
 import { useToast } from '@task-master/client/context';
 import { useToggle } from '@task-master/shared/ui/hooks';
@@ -49,7 +50,8 @@ export const Tasks = () => {
   const [deleteTask, { loading: deleting }] = useMutation(DELETE_TASK);
 
   // Create task mutation to create a new task
-  const [createTask, { loading: submitting }] = useMutation(CREATE_TASK);
+  const [createTask, { loading: addingTask }] = useMutation(CREATE_TASK);
+  const [updateTask, { loading: updatingTask }] = useMutation(UPDATE_TASK);
 
   const nextPage = data?.tasks?.metadata.pagination.nextPage;
 
@@ -60,10 +62,7 @@ export const Tasks = () => {
    * @returns void
    */
   const onSubmit = (data: CreateTaskInput) => {
-    createTask({
-      variables: {
-        input: data,
-      },
+    const submitOptions = {
       onCompleted: () => {
         showToast('success', 'Task created successfully', {
           toastId: 'task-created',
@@ -73,8 +72,23 @@ export const Tasks = () => {
 
         toggle();
       },
-      onError: (error) => showToast('error', (error as Error).message),
-    });
+      onError: (error: unknown) => showToast('error', (error as Error).message),
+    };
+
+    if (editTask.current) {
+      updateTask({
+        variables: {
+          id: editTask.current.id,
+          input: data,
+        },
+        ...submitOptions,
+      });
+    } else {
+      createTask({
+        variables: { input: data },
+        ...submitOptions,
+      });
+    }
   };
 
   /**
@@ -220,7 +234,7 @@ export const Tasks = () => {
       <AddTaskPopUp
         isVisble={isAddTaskModalOpen}
         onClose={onAddTaskClose}
-        submitting={submitting}
+        submitting={addingTask || updatingTask}
         onSubmit={onSubmit}
         defaultValues={editTask.current ?? undefined}
       />

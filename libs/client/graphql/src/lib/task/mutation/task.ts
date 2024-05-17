@@ -8,6 +8,14 @@ export const CREATE_TASK = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_TASK = gql(/* GraphQL */ `
+  mutation UpdateTask($id: ID!, $input: CreateTaskInput!) {
+    updateTask(id: $id, input: $input) {
+      id
+    }
+  }
+`);
+
 export const DELETE_TASK = gql(/* GraphQL */ `
   mutation DeleteTask($id: ID!) {
     deleteTask(id: $id) {

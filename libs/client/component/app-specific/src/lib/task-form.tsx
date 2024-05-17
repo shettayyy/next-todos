@@ -1,7 +1,9 @@
 import { ArrowPathIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { useToast } from '@task-master/client/context';
 import { CreateTaskInput, Task } from '@task-master/client/graphql';
 import {
   Button,
+  ConfirmToast,
   Input,
   Radiobox,
   Textarea,
@@ -64,16 +66,44 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
     onCancel,
     defaultValues,
   } = props;
-  const { handleSubmit, getValues, control } = useForm<TaskForm>({
-    defaultValues: defaultValues ?? {
-      status: options[0].value,
-      title: '',
-      description: '',
+  const { toast } = useToast();
+  const {
+    handleSubmit,
+    getValues,
+    control,
+    formState: { isDirty },
+  } = useForm<TaskForm>({
+    defaultValues: {
+      status: defaultValues?.status ?? options[0].value,
+      title: defaultValues?.title ?? '',
+      description: defaultValues?.description ?? '',
     },
   });
 
   const handleCancel = () => {
-    onCancel?.(getValues());
+    if (isDirty) {
+      toast(
+        (props) => (
+          <ConfirmToast
+            onYes={() => {
+              onCancel?.(getValues());
+              props.closeToast();
+            }}
+            onNo={props.closeToast}
+          />
+        ),
+        {
+          type: 'warning',
+          autoClose: false,
+          draggable: false,
+          closeButton: false,
+          icon: false,
+          toastId: 'unsaved-changes',
+        }
+      );
+    } else {
+      onCancel?.(getValues());
+    }
   };
 
   useEffect(() => {
@@ -155,7 +185,12 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
             <div className="flex items-center justify-center gap-2">
               <ArrowPathIcon className="w-5 h-5 animate-spin" />
 
-              <span>Adding your task...</span>
+              <span>
+                Just a moment...{' '}
+                <span role="img" aria-label="Loading">
+                  🕒
+                </span>
+              </span>
             </div>
           ) : (
             <div className="flex items-center justify-center gap-2">
