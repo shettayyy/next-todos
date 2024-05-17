@@ -52,6 +52,14 @@ export const Tasks = () => {
   // Create task mutation to create a new task
   const [createTask, { loading: submitting }] = useMutation(CREATE_TASK);
 
+  const nextPage = data?.tasks?.metadata.pagination.nextPage;
+
+  /**
+   * Create a new task
+   *
+   * @param data The task details to create
+   * @returns void
+   */
   const onSubmit = (data: CreateTaskInput) => {
     createTask({
       variables: {
@@ -70,8 +78,12 @@ export const Tasks = () => {
     });
   };
 
-  const nextPage = data?.tasks?.metadata.pagination.nextPage;
-
+  /**
+   * Toggle delete task modal
+   *
+   * @param id The task ID to delete
+   * @returns void
+   */
   const onDeleteToggle = (id?: string) => () =>
     setDeleteTaskId((prev) => {
       if (prev === id) {
@@ -81,6 +93,11 @@ export const Tasks = () => {
       return id;
     });
 
+  /**
+   * Handle intersect to fetch more tasks
+   *
+   * @returns void
+   */
   const handleIntersect = useCallback(() => {
     if (!loading && nextPage) {
       fetchMore({
@@ -113,6 +130,12 @@ export const Tasks = () => {
     }
   }, [nextPage, fetchMore, loading]);
 
+  /**
+   * Delete a task
+   *
+   * @param id The task ID to delete
+   * @returns void
+   */
   const onDelete = (id: string) => () => {
     deleteTask({
       variables: { id },
@@ -125,6 +148,12 @@ export const Tasks = () => {
     });
   };
 
+  /**
+   * Render action menu for a task
+   *
+   * @param task The task details required for the action menu
+   * @returns JSX.Element
+   */
   const renderAction = (task: Task) => (
     <Popover className="relative">
       <PopoverButton className="focus:outline-none hover:scale-125 transition-all">
