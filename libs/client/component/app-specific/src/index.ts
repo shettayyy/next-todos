@@ -4,3 +4,4 @@ export * from './lib/not-found';
 export * from './lib/task-form';
 export * from './lib/task-card';
 export * from './lib/task-list';
+export * from './lib/task-card-menu';

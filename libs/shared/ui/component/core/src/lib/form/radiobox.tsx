@@ -76,6 +76,7 @@ export const Radiobox = forwardRef<HTMLInputElement, RadioboxProps>(
                 id={option.value}
                 className="sr-only"
                 ref={ref}
+                checked={restProps.value === option.value}
               />
 
               <p className="text-xs md:text-sm font-medium">{option.label}</p>

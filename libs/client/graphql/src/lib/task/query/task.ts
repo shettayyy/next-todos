@@ -16,6 +16,7 @@ export const GET_TASKS = gql(/* GraphQL */ `
         id
         title
         description
+        status
         taskStatus {
           id
           status

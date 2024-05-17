@@ -4,6 +4,7 @@ import { useToast } from '@task-master/client/context';
 import {
   CreateTaskInput,
   GET_TASK_STATUSES,
+  Task,
 } from '@task-master/client/graphql';
 import {
   Button,
@@ -17,10 +18,17 @@ export interface AddTaskPopUpProps {
   onClose: () => void;
   onSubmit: (data: CreateTaskInput) => void;
   submitting?: boolean;
+  defaultValues?: Task;
 }
 
 export function AddTaskPopUp(props: AddTaskPopUpProps) {
-  const { isVisble, onClose, onSubmit, submitting = false } = props;
+  const {
+    isVisble,
+    onClose,
+    onSubmit,
+    submitting = false,
+    defaultValues,
+  } = props;
   const { showToast, toast } = useToast();
   const { loading, data } = useQuery(GET_TASK_STATUSES, {
     onError: (error) => {
@@ -95,6 +103,7 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
         submitting={submitting}
         options={options}
         onCancel={handleOnClose}
+        defaultValues={defaultValues}
       />
     );
   };

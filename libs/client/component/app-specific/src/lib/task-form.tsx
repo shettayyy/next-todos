@@ -1,5 +1,5 @@
 import { ArrowPathIcon, PlusIcon } from '@heroicons/react/20/solid';
-import { CreateTaskInput } from '@task-master/client/graphql';
+import { CreateTaskInput, Task } from '@task-master/client/graphql';
 import {
   Button,
   Input,
@@ -51,6 +51,7 @@ export interface TaskFormProps {
   getValues?: () => TaskForm;
   shareGetValuesFn?: (getValuesFn: UseFormGetValues<CreateTaskInput>) => void;
   onCancel?: (values: CreateTaskInput) => void;
+  defaultValues?: Task;
 }
 
 export const TaskForm: FC<TaskFormProps> = (props) => {
@@ -61,12 +62,13 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
     submitting = false,
     shareGetValuesFn,
     onCancel,
+    defaultValues,
   } = props;
   const { handleSubmit, getValues, control } = useForm<TaskForm>({
-    defaultValues: {
+    defaultValues: defaultValues ?? {
+      status: options[0].value,
       title: '',
       description: '',
-      status: '',
     },
   });
 

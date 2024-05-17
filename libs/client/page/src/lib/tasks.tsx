@@ -1,6 +1,6 @@
 import { PageHeader } from '@task-master/client/component/layout';
 import { PageLayout } from '@task-master/shared/ui/component/layout';
-import { PlusIcon } from '@heroicons/react/20/solid';
+import { PlusIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { useMutation, useQuery } from '@apollo/client';
 import {
   CREATE_TASK,
@@ -10,16 +10,14 @@ import {
   Task,
 } from '@task-master/client/graphql';
 import { useToast } from '@task-master/client/context';
-import {
-  Button,
-  ConfirmModal,
-  DotMenuIcon,
-} from '@task-master/shared/ui/component/core';
 import { useToggle } from '@task-master/shared/ui/hooks';
+import { useCallback, useRef, useState } from 'react';
+import {
+  TaskCardMenu,
+  TaskList,
+} from '@task-master/client/component/app-specific';
+import { Button, ConfirmModal } from '@task-master/shared/ui/component/core';
 import { AddTaskPopUp } from '@task-master/client/containers';
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
-import { useCallback, useState } from 'react';
-import { TaskList } from '@task-master/client/component/app-specific';
 
 const LIMIT = 40;
 
@@ -45,6 +43,7 @@ export const Tasks = () => {
     },
     notifyOnNetworkStatusChange: true,
   });
+  const editTask = useRef<Task | null>(null);
 
   // Delete task mutation to delete a task
   const [deleteTask, { loading: deleting }] = useMutation(DELETE_TASK);
@@ -92,6 +91,24 @@ export const Tasks = () => {
 
       return id;
     });
+
+  /**
+   * Toggle edit task modal
+   */
+  const onEditToggle = (task: Task) => () => {
+    editTask.current = task;
+    toggle();
+  };
+
+  /**
+   * Close add task modal
+   *
+   * @returns void
+   */
+  const onAddTaskClose = () => {
+    editTask.current = null;
+    toggle();
+  };
 
   /**
    * Handle intersect to fetch more tasks
@@ -155,22 +172,31 @@ export const Tasks = () => {
    * @returns JSX.Element
    */
   const renderAction = (task: Task) => (
-    <Popover className="relative">
-      <PopoverButton className="focus:outline-none hover:scale-125 transition-all">
-        <DotMenuIcon className="w-5 h-5" />
-      </PopoverButton>
+    <TaskCardMenu>
+      <ul>
+        {/* Edit Task */}
+        <li
+          className="text-neutral-200 hover:bg-neutral-600 cursor-pointer"
+          onClick={onEditToggle(task)}
+        >
+          <div className="px-4 py-2 flex gap-2 hover:scale-105 transition-all">
+            <PlusIcon className="w-5 h-5" />
+            <span>Edit</span>
+          </div>
+        </li>
 
-      <PopoverPanel className="absolute right-0 mt-2 w-48 bg-neutral-700 border-2 border-neutral-600 rounded shadow-lg">
-        <ul>
-          <li
-            onClick={onDeleteToggle(task.id)}
-            className="block px-4 py-2 text-neutral-200 hover:bg-neutral-600 cursor-pointer"
-          >
-            Delete
-          </li>
-        </ul>
-      </PopoverPanel>
-    </Popover>
+        {/* Delete Task */}
+        <li
+          onClick={onDeleteToggle(task.id)}
+          className="text-neutral-200 hover:bg-neutral-600 cursor-pointer"
+        >
+          <div className="px-4 py-2 flex gap-2 hover:scale-105 transition-all">
+            <TrashIcon className="w-5 h-5 text-red-500" />
+            <span>Delete</span>
+          </div>
+        </li>
+      </ul>
+    </TaskCardMenu>
   );
 
   return (
@@ -193,9 +219,10 @@ export const Tasks = () => {
 
       <AddTaskPopUp
         isVisble={isAddTaskModalOpen}
-        onClose={toggle}
+        onClose={onAddTaskClose}
         submitting={submitting}
         onSubmit={onSubmit}
+        defaultValues={editTask.current ?? undefined}
       />
 
       <ConfirmModal
