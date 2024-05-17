@@ -6,7 +6,11 @@ import {
   GET_TASK_STATUSES,
   Task,
 } from '@task-master/client/graphql';
-import { Button, Modal } from '@task-master/shared/ui/component/core';
+import {
+  Button,
+  ConfirmToast,
+  Modal,
+} from '@task-master/shared/ui/component/core';
 import { useMemo } from 'react';
 
 export interface AddTaskPopUpProps {
@@ -25,7 +29,7 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
     submitting = false,
     defaultValues,
   } = props;
-  const { showToast } = useToast();
+  const { showToast, toast } = useToast();
   const { loading, data } = useQuery(GET_TASK_STATUSES, {
     onError: (error) => {
       showToast('error', error.message, {
@@ -34,6 +38,32 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
     },
   });
   const taskStatuses = data?.taskStatuses;
+
+  const handleOnClose = (hasUnsavedChanges: boolean) => {
+    if (hasUnsavedChanges) {
+      toast(
+        (props) => (
+          <ConfirmToast
+            onYes={() => {
+              onClose();
+              props.closeToast();
+            }}
+            onNo={props.closeToast}
+          />
+        ),
+        {
+          type: 'warning',
+          autoClose: false,
+          draggable: false,
+          closeButton: false,
+          icon: false,
+          toastId: 'unsaved-changes',
+        }
+      );
+    } else {
+      onClose();
+    }
+  };
 
   const options = useMemo(() => {
     if (!taskStatuses?.length) {
@@ -70,7 +100,7 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
         onSubmit={onSubmit}
         submitting={submitting}
         options={options}
-        onCancel={onClose}
+        onCancel={handleOnClose}
         defaultValues={defaultValues}
       />
     );

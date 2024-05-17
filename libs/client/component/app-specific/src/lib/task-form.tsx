@@ -8,8 +8,8 @@ import {
   Radiobox,
   Textarea,
 } from '@task-master/shared/ui/component/core';
-import { FC, useEffect } from 'react';
-import { Controller, UseFormGetValues, useForm } from 'react-hook-form';
+import { FC } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 export type TaskForm = CreateTaskInput;
 
@@ -51,8 +51,7 @@ export interface TaskFormProps {
   onSubmit: (data: TaskForm) => void;
   submitting?: boolean;
   getValues?: () => TaskForm;
-  shareGetValuesFn?: (getValuesFn: UseFormGetValues<CreateTaskInput>) => void;
-  onCancel?: (values: CreateTaskInput) => void;
+  onCancel?: (hasUnsavedChanges: boolean) => void;
   defaultValues?: Task;
 }
 
@@ -62,14 +61,12 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
     onSubmit,
     submitLabel = 'Submit',
     submitting = false,
-    shareGetValuesFn,
     onCancel,
     defaultValues,
   } = props;
   const { toast } = useToast();
   const {
     handleSubmit,
-    getValues,
     control,
     formState: { isDirty },
   } = useForm<TaskForm>({
@@ -86,7 +83,7 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
         (props) => (
           <ConfirmToast
             onYes={() => {
-              onCancel?.(getValues());
+              onCancel?.(isDirty);
               props.closeToast();
             }}
             onNo={props.closeToast}
@@ -102,13 +99,9 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
         }
       );
     } else {
-      onCancel?.(getValues());
+      onCancel?.(isDirty);
     }
   };
-
-  useEffect(() => {
-    shareGetValuesFn?.(getValues);
-  }, [shareGetValuesFn, getValues]);
 
   return (
     <form
