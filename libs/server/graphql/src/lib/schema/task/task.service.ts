@@ -178,7 +178,7 @@ export const taskService = {
         params?.limit ?? PAGINATION.DEFAULT_LIMIT,
         PAGINATION.MAX_LIMIT
       );
-      const sortField = params?.sort?.field ?? 'createdAt';
+      const sortField = params?.sort?.field ?? 'updatedAt';
       const sortDir = params?.sort?.dir ?? 'DSC';
 
       const tasks = await TaskModel.find(query)
@@ -275,9 +275,8 @@ export const taskService = {
             : index % 2 === 0
             ? '6642597155c5a701cafe6b30'
             : '6642597e55c5a701cafe6b3e',
-        // Add index to add days to the current date
-        createdAt: new Date(new Date().setDate(new Date().getDate() + index)),
-        updatedAt: new Date(new Date().setDate(new Date().getDate() + index)),
+        createdAt: new Date('2021-01-01').setDate(index),
+        updatedAt: new Date('2021-01-01').setDate(index),
       }));
 
       await TaskModel.insertMany(tasks, { ordered: true });
