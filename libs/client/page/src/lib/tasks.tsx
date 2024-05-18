@@ -14,7 +14,11 @@ import {
 import { useToast } from '@task-master/client/context';
 import { useToggle } from '@task-master/shared/ui/hooks';
 import { useCallback, useRef, useState } from 'react';
-import { TaskList, TaskMenu } from '@task-master/client/component/app-specific';
+import {
+  TaskFilterBar,
+  TaskList,
+  TaskMenu,
+} from '@task-master/client/component/app-specific';
 import { Button, ConfirmModal } from '@task-master/shared/ui/component/core';
 import { AddTaskPopUp } from '@task-master/client/containers';
 
@@ -188,24 +192,21 @@ export const Tasks = () => {
     });
   };
 
-  const updateTaskStatus =
-    (task: Task, statusId: Task['status'], close: () => void) => () => {
-      updateTask({
-        variables: {
-          id: task.id,
-          input: {
-            status: statusId,
-          },
+  const updateTaskStatus = (task: Task, statusId: Task['status']) => {
+    updateTask({
+      variables: {
+        id: task.id,
+        input: {
+          status: statusId,
         },
-        onCompleted: () => {
-          showToast('success', 'Task status updated successfully');
-          refetch();
-        },
-        onError: (error) => showToast('error', (error as Error).message),
-      });
-
-      close();
-    };
+      },
+      onCompleted: () => {
+        showToast('success', 'Task status updated successfully');
+        refetch();
+      },
+      onError: (error) => showToast('error', (error as Error).message),
+    });
+  };
 
   /**
    * Render action menu for a task
@@ -232,6 +233,9 @@ export const Tasks = () => {
           <span>Add Task</span>
         </Button>
       </PageHeader>
+
+      {/* Filters Bar */}
+      <TaskFilterBar taskStatuses={taskStatuses} />
 
       <TaskList
         data={data?.tasks?.result as Task[]}

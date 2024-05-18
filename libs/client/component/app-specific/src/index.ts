@@ -5,3 +5,5 @@ export * from './lib/task-form';
 export * from './lib/task-card';
 export * from './lib/task-list';
 export * from './lib/task-menu';
+export * from './lib/task-filter-bar';
+export * from './lib/task-status-menu';

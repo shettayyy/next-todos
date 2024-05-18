@@ -2,15 +2,12 @@ import { PlusIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { GetTaskStatusesQuery, Task } from '@task-master/client/graphql';
 import { DotMenuIcon, Menu } from '@task-master/shared/ui/component/core';
 import { FC } from 'react';
+import { TaskStatusMenu } from './task-status-menu';
 
 export interface TaskMenuProps {
   task: Task;
   taskStatuses?: GetTaskStatusesQuery['taskStatuses'];
-  updateTaskStatus: (
-    task: Task,
-    statusId: string,
-    close: () => void
-  ) => () => void;
+  updateTaskStatus: (task: Task, statusId: string) => void;
   onEditToggle: (task: Task) => () => void;
   onDeleteToggle: (taskId: string) => () => void;
 }
@@ -19,39 +16,21 @@ export const TaskMenu: FC<TaskMenuProps> = (props) => {
   const { task, taskStatuses, updateTaskStatus, onEditToggle, onDeleteToggle } =
     props;
 
+  const handleStatusUpdate =
+    (close: () => void) => (taskStatus: Task['taskStatus']) => {
+      updateTaskStatus(task, taskStatus.id);
+      close();
+    };
+
   return (
-    <Menu button={<DotMenuIcon className="w-5 h-5" />}>
+    <Menu button={<DotMenuIcon className="w-5 h-5" />} placement="bottom-end">
       {({ close }) => (
         <div>
           {/* Update Statuses */}
-          {taskStatuses?.length && (
-            <div>
-              <h6 className="text-neutral-200 text-sm font-semibold px-4 py-2">
-                Mark as
-              </h6>
-
-              <ul>
-                {taskStatuses.map((status) => (
-                  <li
-                    key={status.id}
-                    className="text-neutral-200 hover:bg-neutral-600 cursor-pointer"
-                    onClick={updateTaskStatus(task, status.id, close)}
-                  >
-                    <div className="px-4 py-2 flex gap-2 hover:scale-105 transition-all items-center">
-                      <span
-                        className={`w-3 h-3 rounded-full`}
-                        style={{
-                          backgroundColor: status.bgColor,
-                        }}
-                      />
-
-                      <span>{status.status}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <TaskStatusMenu
+            taskStatuses={taskStatuses}
+            onChange={handleStatusUpdate(close)}
+          />
 
           <div className="w-0.5 h-full bg-neutral-200 mx-auto" />
 
