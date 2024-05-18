@@ -155,10 +155,8 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const onRegister = (user: CreateUserInput) => {
     register({
       variables: { input: user },
-      onCompleted: (data) => {
-        if (data.createUser) {
-          setUser(data.createUser);
-        }
+      onCompleted: () => {
+        onLogin(user.email, user.password);
       },
       onError: (error) => {
         showToast('error', error.message, {

@@ -1,20 +1,29 @@
 import { ArrowPathIcon, PlusIcon } from '@heroicons/react/20/solid';
-import { Task } from '@task-master/client/graphql';
+import { GetTaskStatusesQuery, Task } from '@task-master/client/graphql';
 import { Button, InfiniteScroll } from '@task-master/shared/ui/component/core';
 import { FC } from 'react';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { TaskCard } from './task-card';
+import { TaskFilterBar } from './task-filter-bar';
 
 export interface TaskListProps {
   loading: boolean;
   data?: Task[];
+  taskStatuses: GetTaskStatusesQuery['taskStatuses'];
   handleIntersect: () => void;
   renderActionMenu: (task: Task) => JSX.Element;
   toggle: () => void;
 }
 
 export const TaskList: FC<TaskListProps> = (props) => {
-  const { loading, data, handleIntersect, renderActionMenu, toggle } = props;
+  const {
+    loading,
+    data,
+    handleIntersect,
+    renderActionMenu,
+    toggle,
+    taskStatuses,
+  } = props;
 
   const handleRenderActionMenu = (task: Task) => () => {
     return renderActionMenu(task);
@@ -54,6 +63,9 @@ export const TaskList: FC<TaskListProps> = (props) => {
 
   return (
     <>
+      {/* Filters Bar */}
+      <TaskFilterBar taskStatuses={taskStatuses} />
+
       <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
         <Masonry gutter="2rem">
           {data.map((item) => (
