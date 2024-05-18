@@ -1,9 +1,9 @@
 import { ArrowPathIcon, PlusIcon } from '@heroicons/react/20/solid';
-import { TaskCard } from './task-card';
 import { Task } from '@task-master/client/graphql';
 import { Button, InfiniteScroll } from '@task-master/shared/ui/component/core';
 import { FC } from 'react';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import { TaskCard } from './task-card';
 
 export interface TaskListProps {
   loading: boolean;

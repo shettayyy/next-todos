@@ -10,7 +10,7 @@ export const TaskCollection = 'task';
 export const TaskSchema = new Schema<Task>(
   {
     title: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String },
     status: {
       type: Schema.Types.ObjectId,
       ref: 'TaskStatus',

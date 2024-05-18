@@ -26,6 +26,7 @@ export const GET_TASKS = gql(/* GraphQL */ `
           textColor
         }
         createdAt
+        updatedAt
       }
       metadata {
         pagination {

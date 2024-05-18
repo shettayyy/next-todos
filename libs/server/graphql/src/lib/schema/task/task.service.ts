@@ -7,6 +7,7 @@ import {
   Task,
   TaskList,
   TaskParams,
+  UpdateTaskInput,
 } from '../types.generated';
 import { handleGraphQLError } from '@task-master/shared/utils';
 import mongoose, { UpdateQuery } from 'mongoose';
@@ -65,7 +66,7 @@ export const taskService = {
    */
   updateTask: async (
     taskId: string,
-    task: Partial<CreateTaskInput>,
+    task: UpdateTaskInput,
     userId: string
   ): Promise<Task> => {
     try {
@@ -75,6 +76,14 @@ export const taskService = {
         throw new GraphQLError('Task not found', {
           extensions: {
             code: ErrorCode.TaskNotFound,
+          },
+        });
+      }
+
+      if (!task || Object.keys(task).length === 0) {
+        throw new GraphQLError('No fields provided to update', {
+          extensions: {
+            code: ErrorCode.TaskUpdateFailed,
           },
         });
       }

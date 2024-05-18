@@ -1,9 +1,8 @@
-import { useQuery } from '@apollo/client';
 import { TaskForm } from '@task-master/client/component/app-specific';
 import { useToast } from '@task-master/client/context';
 import {
   CreateTaskInput,
-  GET_TASK_STATUSES,
+  GetTaskStatusesQuery,
   Task,
 } from '@task-master/client/graphql';
 import {
@@ -19,6 +18,8 @@ export interface AddTaskPopUpProps {
   onSubmit: (data: CreateTaskInput) => void;
   submitting?: boolean;
   defaultValues?: Task;
+  taskStatuses: GetTaskStatusesQuery['taskStatuses'];
+  statusFetching: boolean;
 }
 
 export function AddTaskPopUp(props: AddTaskPopUpProps) {
@@ -28,16 +29,10 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
     onSubmit,
     submitting = false,
     defaultValues,
+    taskStatuses,
+    statusFetching,
   } = props;
-  const { showToast, toast } = useToast();
-  const { loading, data } = useQuery(GET_TASK_STATUSES, {
-    onError: (error) => {
-      showToast('error', error.message, {
-        toastId: 'task-statuses-error',
-      });
-    },
-  });
-  const taskStatuses = data?.taskStatuses;
+  const { toast } = useToast();
 
   const handleOnClose = (hasUnsavedChanges: boolean) => {
     if (hasUnsavedChanges) {
@@ -81,7 +76,7 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
   }, [taskStatuses]);
 
   const renderContent = () => {
-    if (loading) {
+    if (statusFetching) {
       return <div>Loading...</div>;
     }
 

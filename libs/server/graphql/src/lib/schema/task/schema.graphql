@@ -106,13 +106,19 @@ extend type Query {
 
 input CreateTaskInput {
   title: String!
-  description: String!
+  description: String
   status: ID!
+}
+
+input UpdateTaskInput {
+  title: String
+  description: String
+  status: ID
 }
 
 extend type Mutation {
   createTask(input: CreateTaskInput!): Task @auth
-  updateTask(id: ID!, input: CreateTaskInput!): Task @auth
+  updateTask(id: ID!, input: UpdateTaskInput!): Task @auth
   deleteTask(id: ID!): Task @auth
   cloneTasks: Boolean! @auth
   clearTasks: Boolean! @auth

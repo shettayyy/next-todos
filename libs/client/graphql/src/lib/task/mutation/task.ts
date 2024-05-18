@@ -9,7 +9,7 @@ export const CREATE_TASK = gql(/* GraphQL */ `
 `);
 
 export const UPDATE_TASK = gql(/* GraphQL */ `
-  mutation UpdateTask($id: ID!, $input: CreateTaskInput!) {
+  mutation UpdateTask($id: ID!, $input: UpdateTaskInput!) {
     updateTask(id: $id, input: $input) {
       id
     }
