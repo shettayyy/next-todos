@@ -19,9 +19,13 @@ export const taskStatusService = {
    * const taskStatus = await taskService.createTaskStatus('New Status');
    * ```
    */
-  createTaskStatus: async (status: string): Promise<TaskStatus> => {
+  createTaskStatus: async (statusDetails: {
+    status: TaskStatus['status'];
+    bgColor: TaskStatus['bgColor'];
+    textColor: TaskStatus['textColor'];
+  }): Promise<TaskStatus> => {
     try {
-      const result = await TaskStatusModel.create({ status });
+      const result = await TaskStatusModel.create(statusDetails);
 
       if (!result) {
         throw new GraphQLError('Failed to create a task status', {

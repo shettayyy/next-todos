@@ -34,6 +34,7 @@ export interface TaskFormProps {
   options: {
     value: string;
     label: string;
+    colors?: { bgColor: string; textColor: string };
   }[];
   /**
    * Submit button label
@@ -112,11 +113,30 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
         name="status"
         control={control}
         render={({ field, formState: { errors } }) => (
-          <Radiobox
-            options={options}
-            {...field}
-            error={errors.status?.message}
-          />
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-center gap-3">
+              {options.map((option) => (
+                <Radiobox
+                  key={option.value}
+                  option={option}
+                  labelStyle={
+                    // only set the color if the option has colors and is selected
+                    option.colors && option.value === field.value
+                      ? {
+                          backgroundColor: option.colors.bgColor,
+                          color: option.colors.textColor,
+                        }
+                      : undefined
+                  }
+                  {...field}
+                />
+              ))}
+            </div>
+
+            <p className="text-red-500 text-xs md:text-sm text-center">
+              {errors.status?.message}
+            </p>
+          </div>
         )}
         rules={{ required: 'Status is required' }}
       />

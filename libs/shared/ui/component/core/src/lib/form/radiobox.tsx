@@ -14,10 +14,10 @@ export interface RadioboxProps
    * { value: 'green', label: 'Green' },
    * ];
    */
-  options: Array<{
+  option: {
     value: string;
     label: string;
-  }>;
+  };
   /**
    * Error message
    *
@@ -28,6 +28,15 @@ export interface RadioboxProps
    * 'This field is required'
    */
   error?: string;
+  /**
+   * Style prop
+   *
+   * @default undefined
+   *
+   * @example
+   * { color: 'red' }
+   */
+  labelStyle?: React.CSSProperties;
 }
 
 /**
@@ -51,41 +60,32 @@ export interface RadioboxProps
  */
 export const Radiobox = forwardRef<HTMLInputElement, RadioboxProps>(
   (props, ref) => {
-    const { options, error, ...restProps } = props;
+    const { option, error, labelStyle, ...restProps } = props;
 
     return (
-      <fieldset className="flex flex-col gap-2">
-        <div className="flex flex-wrap justify-center gap-2">
-          <legend className="sr-only">Color</legend>
+      <label
+        key={option.value}
+        htmlFor={option.value}
+        className={clsx(
+          'flex cursor-pointer items-center justify-center rounded-md bg-white px-2 md:px-4 py-2 text-gray-900 transition-all duration-200 ease-in-out has-[:checked]:border-orange-400 has-[:checked]:bg-orange-400 pointer-events-auto hover:scale-105',
+          {
+            'border-red-500 border': !!error,
+          }
+        )}
+        style={labelStyle}
+      >
+        <input
+          {...restProps}
+          type="radio"
+          value={option.value}
+          id={option.value}
+          className="sr-only"
+          ref={ref}
+          checked={restProps.value === option.value}
+        />
 
-          {options.map((option) => (
-            <label
-              key={option.value}
-              htmlFor={option.value}
-              className={clsx(
-                'flex cursor-pointer items-center justify-center rounded-md bg-white px-2 md:px-4 py-2 text-gray-900 hover:bg-orange-300 transition-all duration-200 ease-in-out has-[:checked]:border-orange-400 has-[:checked]:bg-orange-400 pointer-events-auto',
-                {
-                  'border-red-500 border': !!error,
-                }
-              )}
-            >
-              <input
-                {...restProps}
-                type="radio"
-                value={option.value}
-                id={option.value}
-                className="sr-only"
-                ref={ref}
-                checked={restProps.value === option.value}
-              />
-
-              <p className="text-xs md:text-sm font-medium">{option.label}</p>
-            </label>
-          ))}
-        </div>
-
-        <p className="text-red-500 text-xs md:text-sm text-center">{error}</p>
-      </fieldset>
+        <p className="text-xs md:text-sm font-medium">{option.label}</p>
+      </label>
     );
   }
 );

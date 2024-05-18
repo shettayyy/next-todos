@@ -73,6 +73,10 @@ export function AddTaskPopUp(props: AddTaskPopUpProps) {
     return taskStatuses.map((status) => ({
       value: status.id,
       label: status.status,
+      colors: {
+        bgColor: status.bgColor,
+        textColor: status.textColor,
+      },
     }));
   }, [taskStatuses]);
 

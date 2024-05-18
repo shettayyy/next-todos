@@ -1,12 +1,20 @@
 type TaskStatus {
   id: ObjectID!
   status: String!
+  bgColor: String!
+  textColor: String!
 }
 
 extend type Query {
   taskStatuses: [TaskStatus!] @auth
 }
 
+input CreateTaskStatusInput {
+  status: String!
+  bgColor: String!
+  textColor: String!
+}
+
 extend type Mutation {
-  createTaskStatus(status: String!): TaskStatus @auth
+  createTaskStatus(input: CreateTaskStatusInput!): TaskStatus @auth
 }

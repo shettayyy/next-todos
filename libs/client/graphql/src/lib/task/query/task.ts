@@ -5,6 +5,8 @@ export const GET_TASK_STATUSES = gql(/* GraphQL */ `
     taskStatuses {
       id
       status
+      bgColor
+      textColor
     }
   }
 `);
@@ -20,6 +22,8 @@ export const GET_TASKS = gql(/* GraphQL */ `
         taskStatus {
           id
           status
+          bgColor
+          textColor
         }
         createdAt
       }
