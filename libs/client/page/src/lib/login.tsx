@@ -57,7 +57,9 @@ export function Login() {
           aria-invalid={!!errors.password}
         />
 
-        <Button type="submit">{isLoggingIn ? 'Logging in...' : 'Login'}</Button>
+        <Button type="submit" disabled={isLoggingIn}>
+          {isLoggingIn ? 'Logging in...' : 'Login'}
+        </Button>
       </form>
 
       <p className="mt-4">

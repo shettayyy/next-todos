@@ -115,7 +115,7 @@ export const SignUp = () => {
           aria-invalid={!!errors.confirmPassword}
         />
 
-        <Button type="submit">
+        <Button type="submit" disabled={isSigningUp}>
           {isSigningUp ? 'Signing up...' : 'Sign Up'}
         </Button>
       </form>
