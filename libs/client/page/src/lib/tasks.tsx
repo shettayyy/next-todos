@@ -25,6 +25,21 @@ import { AddTaskPopUp } from '@task-master/client/containers';
 
 const LIMIT = 40;
 
+const constructFilters = (filters?: TaskFilters) => {
+  if (!filters) {
+    return {
+      search: '',
+    };
+  }
+
+  return {
+    search: filters.searchTerm,
+    ...(filters.selectedStatus.id !== '-1' && {
+      status: filters.selectedStatus.id,
+    }),
+  };
+};
+
 export const Tasks = () => {
   const { showToast } = useToast();
 
@@ -39,9 +54,7 @@ export const Tasks = () => {
       input: {
         page: 1,
         limit: LIMIT,
-        filter: {
-          search: '',
-        },
+        filter: constructFilters(),
       },
     },
     notifyOnNetworkStatusChange: true,
@@ -152,12 +165,7 @@ export const Tasks = () => {
           input: {
             page: nextPage,
             limit: LIMIT,
-            filter: {
-              search: filtersRef.current?.searchTerm,
-              ...(filtersRef.current?.selectedStatus.id !== '-1' && {
-                status: filtersRef.current?.selectedStatus.id,
-              }),
-            },
+            filter: constructFilters(filtersRef.current),
           },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
@@ -221,12 +229,7 @@ export const Tasks = () => {
         input: {
           page: 1,
           limit: LIMIT,
-          filter: {
-            search: filters.searchTerm,
-            ...(filters.selectedStatus.id !== '-1' && {
-              status: filters.selectedStatus.id,
-            }),
-          },
+          filter: constructFilters(filters),
         },
       });
     },
