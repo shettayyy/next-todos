@@ -28,8 +28,8 @@ export const Modal: FC<ModalProps> = (props) => {
       <Dialog onClose={onClose} className="relative z-50">
         <div className="fixed inset-0 bg-black/70" aria-hidden="true" />
 
-        <div className="fixed inset-0 flex w-screen overflow-y-auto p-4">
-          <DialogPanel className="space-y-4 m-auto bg-neutral-700 text-slate-100 p-8">
+        <div className="fixed inset-0 flex w-screen overflow-y-auto py-4">
+          <DialogPanel className="space-y-4 m-auto bg-neutral-700 text-slate-100 p-4 md:p-8">
             <DialogTitle className="font-raleway font-bold tracking-wide text-3xl text-center mb-6">
               {title}
             </DialogTitle>

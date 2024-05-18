@@ -106,7 +106,7 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
 
   return (
     <form
-      className="space-y-4 m-auto w-56 md:w-96 justify-center items-center"
+      className="space-y-4 m-auto w-60 md:w-96 justify-center items-center"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Controller
@@ -179,7 +179,7 @@ export const TaskForm: FC<TaskFormProps> = (props) => {
         }}
       />
 
-      <div className="flex gap-2 md:gap-4">
+      <div className="flex flex-col md:flex-row gap-2 md:gap-4">
         <Button
           className="w-full items-center justify-center"
           disabled={submitting}
