@@ -9,12 +9,14 @@ import {
   GET_TASKS,
   GET_TASK_STATUSES,
   Task,
+  TaskSort,
   UPDATE_TASK,
 } from '@task-master/client/graphql';
 import { useToast } from '@task-master/client/context';
 import { useToggle } from '@task-master/shared/ui/hooks';
 import { useCallback, useRef, useState } from 'react';
 import {
+  TASK_SORT_OPTIONS,
   TaskFilterBar,
   TaskFilters,
   TaskList,
@@ -40,6 +42,20 @@ const constructFilters = (filters?: TaskFilters) => {
   };
 };
 
+const constructSort = (sort?: TaskSort) => {
+  if (!sort) {
+    return {
+      field: TASK_SORT_OPTIONS[0].field,
+      dir: TASK_SORT_OPTIONS[0].dir,
+    };
+  }
+
+  return {
+    field: sort.field,
+    dir: sort.dir,
+  };
+};
+
 export const Tasks = () => {
   const { showToast } = useToast();
 
@@ -55,6 +71,7 @@ export const Tasks = () => {
         page: 1,
         limit: LIMIT,
         filter: constructFilters(),
+        sort: constructSort(),
       },
     },
     notifyOnNetworkStatusChange: true,
@@ -83,6 +100,8 @@ export const Tasks = () => {
 
   // Filters ref
   const filtersRef = useRef<TaskFilters>();
+  // Sort ref
+  const sortRef = useRef<TaskSort>();
 
   /**
    * Create a new task
@@ -166,6 +185,7 @@ export const Tasks = () => {
             page: nextPage,
             limit: LIMIT,
             filter: constructFilters(filtersRef.current),
+            sort: constructSort(sortRef.current),
           },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
@@ -224,12 +244,14 @@ export const Tasks = () => {
   const onFilterChange = useCallback(
     (filters: TaskFilters) => {
       filtersRef.current = filters;
+      sortRef.current = filters.selectedSort;
 
       refetch({
         input: {
           page: 1,
           limit: LIMIT,
-          filter: constructFilters(filters),
+          filter: constructFilters(filtersRef.current),
+          sort: constructSort(sortRef.current),
         },
       });
     },

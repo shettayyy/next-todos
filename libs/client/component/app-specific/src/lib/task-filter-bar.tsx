@@ -1,14 +1,18 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import { GetTaskStatusesQuery, TaskStatus } from '@task-master/client/graphql';
+import {
+  GetTaskStatusesQuery,
+  SortDirection,
+  SortField,
+  TaskSort,
+  TaskStatus,
+} from '@task-master/client/graphql';
 import { Input, Menu } from '@task-master/shared/ui/component/core';
 // import { useDebounce } from '@task-master/shared/ui/hooks';
 import { FC, useEffect, useRef, useState } from 'react';
 import { TaskStatusMenu } from './task-status-menu';
 
-export interface SortOption {
-  field: string;
+export interface SortOption extends TaskSort {
   label: string;
-  order: 'asc' | 'desc';
 }
 
 export interface TaskFilters {
@@ -22,21 +26,21 @@ export interface TaskFilterBarProps {
   onFilterChange: (filters: TaskFilters) => void;
 }
 
-const TASK_SORT_OPTIONS: SortOption[] = [
+export const TASK_SORT_OPTIONS: SortOption[] = [
   {
-    field: 'createdAt',
-    label: 'Newest',
-    order: 'desc',
-  },
-  {
-    field: 'createdAt',
-    label: 'Oldest',
-    order: 'asc',
-  },
-  {
-    field: 'updatedAt',
+    field: SortField.UpdatedAt,
     label: 'Last Modified',
-    order: 'desc',
+    dir: SortDirection.Desc,
+  },
+  {
+    field: SortField.CreatedAt,
+    label: 'Newest',
+    dir: SortDirection.Desc,
+  },
+  {
+    field: SortField.CreatedAt,
+    label: 'Oldest',
+    dir: SortDirection.Asc,
   },
 ];
 
@@ -80,6 +84,12 @@ export const TaskFilterBar: FC<TaskFilterBarProps> = (props) => {
     ) {
       return;
     }
+
+    prevFilters.current = {
+      searchTerm,
+      selectedStatus,
+      selectedSort,
+    };
 
     onFilterChange({
       searchTerm,

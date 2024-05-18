@@ -25,19 +25,15 @@ enum SortField {
   """
   Sort the list by the title
   """
-  TITLE
-  """
-  Sort the list by the status
-  """
-  STATUS
+  title
   """
   Sort the list by the created date
   """
-  CREATED_AT
+  createdAt
   """
   Sort the list by the updated date
   """
-  UPDATED_AT
+  updatedAt
 }
 
 input TaskSort {
