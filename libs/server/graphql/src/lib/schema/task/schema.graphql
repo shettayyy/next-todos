@@ -55,11 +55,11 @@ input TaskFilter {
   """
   The search query for the task list
   """
-  search: String!
+  search: String
   """
   Filter the task list by the status
   """
-  status: ID!
+  status: ID
 }
 
 input TaskParams {

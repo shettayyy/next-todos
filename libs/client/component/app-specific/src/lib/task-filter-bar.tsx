@@ -2,14 +2,27 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { GetTaskStatusesQuery, TaskStatus } from '@task-master/client/graphql';
 import { Input, Menu } from '@task-master/shared/ui/component/core';
 // import { useDebounce } from '@task-master/shared/ui/hooks';
-import { FC, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { TaskStatusMenu } from './task-status-menu';
+
+export interface SortOption {
+  field: string;
+  label: string;
+  order: 'asc' | 'desc';
+}
+
+export interface TaskFilters {
+  searchTerm: string;
+  selectedStatus: TaskStatus;
+  selectedSort: SortOption;
+}
 
 export interface TaskFilterBarProps {
   taskStatuses: GetTaskStatusesQuery['taskStatuses'];
+  onFilterChange: (filters: TaskFilters) => void;
 }
 
-const TASK_SORT_OPTIONS = [
+const TASK_SORT_OPTIONS: SortOption[] = [
   {
     field: 'createdAt',
     label: 'Newest',
@@ -28,7 +41,7 @@ const TASK_SORT_OPTIONS = [
 ];
 
 export const TaskFilterBar: FC<TaskFilterBarProps> = (props) => {
-  const { taskStatuses } = props;
+  const { taskStatuses, onFilterChange } = props;
   const [searchTerm, setSearchTerm] = useState('');
   // const debouncedSearch = useDebounce(searchTerm, 500);
   const taskStatusOptions = [
@@ -44,12 +57,36 @@ export const TaskFilterBar: FC<TaskFilterBarProps> = (props) => {
     taskStatusOptions[0]
   );
   const [selectedSort, setSelectedSort] = useState(TASK_SORT_OPTIONS[0]);
+  const prevFilters = useRef<TaskFilters>({
+    searchTerm: '',
+    selectedStatus: taskStatusOptions[0],
+    selectedSort: TASK_SORT_OPTIONS[0],
+  });
 
   const onSelectedStatusChange =
     (close: () => void) => (taskStatus: TaskStatus) => {
       setSelectedStatus(taskStatus);
       close();
     };
+
+  useEffect(() => {
+    // Don't call the method if the filters haven't changed
+    if (
+      Object.keys(prevFilters.current).every(
+        (key) =>
+          prevFilters.current[key as keyof TaskFilters] ===
+          { searchTerm, selectedStatus, selectedSort }[key as keyof TaskFilters]
+      )
+    ) {
+      return;
+    }
+
+    onFilterChange({
+      searchTerm,
+      selectedStatus,
+      selectedSort,
+    });
+  }, [searchTerm, selectedStatus, selectedSort, onFilterChange]);
 
   return (
     <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full justify-between">

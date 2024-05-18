@@ -14,7 +14,12 @@ import {
 import { useToast } from '@task-master/client/context';
 import { useToggle } from '@task-master/shared/ui/hooks';
 import { useCallback, useRef, useState } from 'react';
-import { TaskList, TaskMenu } from '@task-master/client/component/app-specific';
+import {
+  TaskFilterBar,
+  TaskFilters,
+  TaskList,
+  TaskMenu,
+} from '@task-master/client/component/app-specific';
 import { Button, ConfirmModal } from '@task-master/shared/ui/component/core';
 import { AddTaskPopUp } from '@task-master/client/containers';
 
@@ -36,7 +41,6 @@ export const Tasks = () => {
         limit: LIMIT,
         filter: {
           search: '',
-          status: '',
         },
       },
     },
@@ -63,6 +67,9 @@ export const Tasks = () => {
   const [updateTask, { loading: updatingTask }] = useMutation(UPDATE_TASK);
 
   const nextPage = data?.tasks?.metadata.pagination.nextPage;
+
+  // Filters ref
+  const filtersRef = useRef<TaskFilters>();
 
   /**
    * Create a new task
@@ -146,8 +153,10 @@ export const Tasks = () => {
             page: nextPage,
             limit: LIMIT,
             filter: {
-              search: '',
-              status: '',
+              search: filtersRef.current?.searchTerm,
+              ...(filtersRef.current?.selectedStatus.id !== '-1' && {
+                status: filtersRef.current?.selectedStatus.id,
+              }),
             },
           },
         },
@@ -204,6 +213,26 @@ export const Tasks = () => {
     });
   };
 
+  const onFilterChange = useCallback(
+    (filters: TaskFilters) => {
+      filtersRef.current = filters;
+
+      refetch({
+        input: {
+          page: 1,
+          limit: LIMIT,
+          filter: {
+            search: filters.searchTerm,
+            ...(filters.selectedStatus.id !== '-1' && {
+              status: filters.selectedStatus.id,
+            }),
+          },
+        },
+      });
+    },
+    [refetch]
+  );
+
   /**
    * Render action menu for a task
    *
@@ -230,13 +259,18 @@ export const Tasks = () => {
         </Button>
       </PageHeader>
 
+      {/* Filters Bar */}
+      <TaskFilterBar
+        taskStatuses={taskStatuses}
+        onFilterChange={onFilterChange}
+      />
+
       <TaskList
         data={data?.tasks?.result as Task[]}
         loading={loading}
         handleIntersect={handleIntersect}
         renderActionMenu={renderAction}
         toggle={toggle}
-        taskStatuses={taskStatuses}
       />
 
       <AddTaskPopUp
