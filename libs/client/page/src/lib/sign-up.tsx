@@ -46,6 +46,14 @@ export const SignUp = () => {
           placeholder="Enter your first name..."
           {...register('firstName', {
             required: 'First Name is required',
+            minLength: {
+              value: 2,
+              message: 'First Name should be at least 2 characters long',
+            },
+            maxLength: {
+              value: 30,
+              message: 'First Name should be at most 20 characters long',
+            },
             pattern: {
               value: /^[A-Za-z]+$/i,
               message: 'First Name should contain only alphabets',
@@ -61,6 +69,14 @@ export const SignUp = () => {
           placeholder="Enter your last name..."
           {...register('lastName', {
             required: 'Last Name is required',
+            minLength: {
+              value: 2,
+              message: 'Last Name should be at least 2 characters long',
+            },
+            maxLength: {
+              value: 30,
+              message: 'Last Name should be at most 100 characters long',
+            },
             pattern: {
               value: /^[A-Za-z]+$/i,
               message: 'Last Name should contain only alphabets',
