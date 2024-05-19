@@ -22,4 +22,5 @@ extend type Mutation {
   createUser(input: CreateUserInput!): User
   login(email: String!, password: String!): User
   logout: User
+  generateUserProfilePictureURL(filename: String!): String! @auth
 }

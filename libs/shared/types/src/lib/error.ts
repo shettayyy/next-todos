@@ -14,4 +14,8 @@ export enum ErrorCode {
   // Task Status
   TaskStatusCreationFailed = 'TASK_STATUS_CREATION_FAILED',
   TaskStatusFetchFailed = 'TASK_STATUS_FETCH_FAILED',
+
+  // File Upload
+  InvalidFileExtension = 'INVALID_FILE_EXTENSION',
+  FailedToGenerateSignedURL = 'FAILED_TO_GENERATE_SIGNED_URL',
 }

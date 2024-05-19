@@ -4,6 +4,8 @@ import { UserModel } from './user.model';
 import { GraphQLError } from 'graphql';
 import { ErrorCode } from '@task-master/shared/types';
 import { User } from '../types.generated';
+import { parse } from 'path';
+import { getSignedUploadUrl } from '@task-master/server/config';
 
 passport.use(UserModel.createStrategy());
 passport.serializeUser(UserModel.serializeUser() as never);
@@ -103,5 +105,30 @@ export const userService = {
     } catch (error) {
       return handleGraphQLError(error);
     }
+  },
+
+  generateUserProfileURL: async (filename: string) => {
+    const { ext } = parse(filename);
+
+    // Validate the file extension
+    if (!ext || !['.jpg', '.jpeg', '.png'].includes(ext)) {
+      throw new GraphQLError('Invalid file extension', {
+        extensions: {
+          code: ErrorCode.InvalidFileExtension,
+        },
+      });
+    }
+
+    const res = await getSignedUploadUrl(`user-profiles/${filename}`);
+
+    if (!res) {
+      throw new GraphQLError('Failed to generate signed URL', {
+        extensions: {
+          code: ErrorCode.FailedToGenerateSignedURL,
+        },
+      });
+    }
+
+    return res;
   },
 };

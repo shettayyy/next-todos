@@ -12,7 +12,7 @@ import helmet from 'helmet';
 import { Server } from 'http';
 import mongoose from 'mongoose';
 
-import { env } from '../environment/env';
+import { env } from '@task-master/server/config';
 import { DocumentNode } from 'graphql';
 import passport from 'passport';
 import session from 'express-session';
