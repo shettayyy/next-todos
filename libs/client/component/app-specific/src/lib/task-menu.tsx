@@ -1,4 +1,4 @@
-import { PlusIcon, TrashIcon } from '@heroicons/react/20/solid';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { GetTaskStatusesQuery, Task } from '@task-master/client/graphql';
 import { DotMenuIcon, Menu } from '@task-master/shared/ui/component/core';
 import { FC } from 'react';
@@ -46,8 +46,8 @@ export const TaskMenu: FC<TaskMenuProps> = (props) => {
                 className="text-neutral-200 hover:bg-neutral-600 cursor-pointer"
                 onClick={onEditToggle(task)}
               >
-                <div className="px-4 py-2 flex gap-2 hover:scale-105 transition-all">
-                  <PlusIcon className="w-5 h-5" />
+                <div className="px-4 py-2 items-center flex gap-2 hover:scale-105 transition-all">
+                  <PencilSquareIcon className="w-5 h-5" />
                   <span>Edit</span>
                 </div>
               </li>
@@ -57,7 +57,7 @@ export const TaskMenu: FC<TaskMenuProps> = (props) => {
                 onClick={onDeleteToggle(task.id)}
                 className="text-neutral-200 hover:bg-neutral-600 cursor-pointer"
               >
-                <div className="px-4 py-2 flex gap-2 hover:scale-105 transition-all">
+                <div className="px-4 py-2 items-center flex gap-2 hover:scale-105 transition-all">
                   <TrashIcon className="w-5 h-5 text-red-500" />
                   <span>Delete</span>
                 </div>
