@@ -9,8 +9,8 @@ export const TaskCollection = 'task';
 // Task schema
 export const TaskSchema = new Schema<Task>(
   {
-    title: { type: String, required: true },
-    description: { type: String },
+    title: { type: String, required: true, text: true },
+    description: { type: String, text: true },
     status: {
       type: Schema.Types.ObjectId,
       ref: 'TaskStatus',

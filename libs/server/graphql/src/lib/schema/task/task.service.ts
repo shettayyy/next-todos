@@ -174,13 +174,6 @@ export const taskService = {
         query['title'] = { $regex: params.filter.search, $options: 'i' };
       }
 
-      // if (filter?.date) {
-      //   query['createdAt'] = {
-      //     $gte: new Date(filter.date),
-      //     $lt: new Date(new Date(filter.date).setDate(new Date(filter.date).getDate() + 1)),
-      //   };
-      // }
-
       const page = params?.page ?? PAGINATION.DEFAULT_PAGE;
       // Limit number of tasks to fetch
       const limit = Math.min(
