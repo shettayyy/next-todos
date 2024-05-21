@@ -16,7 +16,7 @@ export const PageHeader: FC<PageHeaderProps> = ({
 }) => {
   return (
     <div className={clsx('flex justify-between items-center', className)}>
-      <h2 className="flex items-center font-raleway tracking-widest font-bold uppercase text-2xl">
+      <h2 className="flex items-center font-raleway tracking-widest font-bold uppercase text-lg md:text-2xl">
         {onBack && (
           <button
             onClick={onBack}

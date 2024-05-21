@@ -6,5 +6,6 @@ export const UserFragmentDoc = gql(`
     email
     firstName
     lastName
+    profilePictureURL
   }
 `);

@@ -1,4 +1,5 @@
 export * from './lib/user/query/user';
+export * from './lib/user/mutation/user_upload';
 export * from './lib/user/mutation/user_auth';
 export * from './lib/user/fragment/user';
 export * from './lib/task/query/task';

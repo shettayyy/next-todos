@@ -18,8 +18,16 @@ input CreateUserInput {
   profilePictureURL: String
 }
 
+input UpdateUserInput {
+  firstName: String
+  lastName: String
+  email: String
+  profilePictureURL: String
+}
+
 extend type Mutation {
   createUser(input: CreateUserInput!): User
+  updateUser(input: UpdateUserInput!): User @auth
   login(email: String!, password: String!): User
   logout: User
   generateUserProfilePictureURL(filename: String!): String! @auth

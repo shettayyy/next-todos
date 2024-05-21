@@ -3,9 +3,10 @@ import passport from 'passport';
 import { UserModel } from './user.model';
 import { GraphQLError } from 'graphql';
 import { ErrorCode } from '@task-master/shared/types';
-import { User } from '../types.generated';
+import { UpdateUserInput, User } from '../types.generated';
 import { parse } from 'path';
 import { getSignedUploadUrl } from '@task-master/server/config';
+import { UpdateQuery } from 'mongoose';
 
 passport.use(UserModel.createStrategy());
 passport.serializeUser(UserModel.serializeUser() as never);
@@ -34,6 +35,57 @@ export const userAuthService = {
       return result;
     } catch (error) {
       return handleGraphQLError(error, ErrorCode.UserRegistrationFailed);
+    }
+  },
+
+  updateUser: async (id: User['id'], user: UpdateUserInput) => {
+    try {
+      const existingUser = await UserModel.findOne({ _id: id });
+
+      if (!existingUser) {
+        throw new GraphQLError('User not found', {
+          extensions: {
+            code: ErrorCode.UserNotFound,
+          },
+        });
+      }
+
+      if (!user || Object.keys(user).length === 0) {
+        throw new GraphQLError('No data to update', {
+          extensions: {
+            code: ErrorCode.NoUserDataToUpdate,
+          },
+        });
+      }
+
+      // Update only the fields that are provided
+      const updateQuery: UpdateQuery<UpdateUserInput> = { $set: {} };
+
+      for (const key in user) {
+        const value = user[key as keyof UpdateUserInput];
+
+        if (value && updateQuery.$set) {
+          updateQuery.$set[key as keyof UpdateUserInput] = value;
+        }
+      }
+
+      const result = await UserModel.findOneAndUpdate(
+        { _id: id },
+        updateQuery,
+        { new: true }
+      );
+
+      if (!result) {
+        throw new GraphQLError('Failed to update the task', {
+          extensions: {
+            code: ErrorCode.TaskUpdateFailed,
+          },
+        });
+      }
+
+      return result;
+    } catch (error) {
+      return handleGraphQLError(error);
     }
   },
 
@@ -107,7 +159,7 @@ export const userService = {
     }
   },
 
-  generateUserProfileURL: async (filename: string) => {
+  generateUserProfileURL: async (filename: string, userId: string) => {
     const { ext } = parse(filename);
 
     // Validate the file extension
@@ -119,7 +171,7 @@ export const userService = {
       });
     }
 
-    const res = await getSignedUploadUrl(`user-profiles/${filename}`);
+    const res = await getSignedUploadUrl(`user-profiles/${userId}/${filename}`);
 
     if (!res) {
       throw new GraphQLError('Failed to generate signed URL', {

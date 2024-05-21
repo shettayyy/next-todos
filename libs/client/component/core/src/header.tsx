@@ -1,11 +1,10 @@
 import { FC } from 'react';
 import {
-  Avatar,
   Header as HeaderCore,
   Menu,
+  UserAvatar,
 } from '@task-master/shared/ui/component/core';
 import { UserItemFragment } from '@task-master/client/graphql';
-import { getInitials } from '@task-master/shared/utils';
 import { Link, useNavigate } from 'react-router-dom';
 import { LockClosedIcon, UserIcon } from '@heroicons/react/20/solid';
 
@@ -41,18 +40,24 @@ export const Header: FC<HeaderProps> = (props) => {
         <Menu
           placement="bottom-end"
           button={
-            <Avatar
-              text={getInitials(user.firstName, user.lastName)}
-              className="w-10 h-10"
+            <UserAvatar
+              url={user.profilePictureURL ?? ''}
+              firstName={user.firstName}
+              lastName={user.lastName}
+              width={3}
+              height={3}
             />
           }
         >
           {({ close }) => (
             <>
               <div className="font-semibold bg-neutral-800 mb-4 py-6 flex flex-col items-center gap-2">
-                <Avatar
-                  text={getInitials(user.firstName, user.lastName)}
-                  className="w-10 h-10"
+                <UserAvatar
+                  url={user.profilePictureURL ?? ''}
+                  firstName={user.firstName}
+                  lastName={user.lastName}
+                  width={4}
+                  height={4}
                 />
                 {user.firstName} {user.lastName}
               </div>

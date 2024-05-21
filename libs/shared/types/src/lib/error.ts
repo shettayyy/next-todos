@@ -5,6 +5,7 @@ export enum ErrorCode {
   UserLogoutFailed = 'USER_LOGOUT_FAILED',
   Unauthorized = 'UNAUTHORIZED',
   UserNotFound = 'USER_NOT_FOUND',
+  NoUserDataToUpdate = 'NO_USER_DATA_TO_UPDATE',
 
   // Task
   TaskCreationFailed = 'TASK_CREATION_FAILED',

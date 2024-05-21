@@ -26,6 +26,19 @@ export const REGISTER = gql(/* GraphQL */ `
       firstName
       id
       lastName
+      profilePictureURL
+    }
+  }
+`);
+
+export const UPDATE_USER = gql(/* GraphQL */ `
+  mutation UpdateUser($input: UpdateUserInput!) {
+    updateUser(input: $input) {
+      email
+      firstName
+      id
+      lastName
+      profilePictureURL
     }
   }
 `);
