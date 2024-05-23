@@ -27,7 +27,7 @@ export interface RadioboxProps
    *
    * 'This field is required'
    */
-  error?: string;
+  error?: boolean;
   /**
    * Style prop
    *
@@ -60,16 +60,16 @@ export interface RadioboxProps
  */
 export const Radiobox = forwardRef<HTMLInputElement, RadioboxProps>(
   (props, ref) => {
-    const { option, error, labelStyle, ...restProps } = props;
+    const { option, error = false, labelStyle, ...restProps } = props;
 
     return (
       <label
         key={option.value}
-        htmlFor={option.value}
+        htmlFor={restProps?.id ?? option.value}
         className={clsx(
           'flex cursor-pointer items-center justify-center rounded-md bg-white px-2 md:px-4 py-2 text-gray-900 transition-all duration-200 ease-in-out has-[:checked]:border-orange-400 has-[:checked]:bg-orange-400 pointer-events-auto hover:scale-105',
           {
-            'border-red-500 border': !!error,
+            'border-red-500 border': error,
           }
         )}
         style={labelStyle}
@@ -78,7 +78,7 @@ export const Radiobox = forwardRef<HTMLInputElement, RadioboxProps>(
           {...restProps}
           type="radio"
           value={option.value}
-          id={option.value}
+          id={restProps?.id ?? option.value}
           className="sr-only"
           ref={ref}
           checked={restProps.value === option.value}
