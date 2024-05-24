@@ -1,4 +1,4 @@
-import { render, screen, logDOM } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { fn } from 'jest-mock';
 import { Radiobox } from './radiobox';
@@ -92,9 +92,6 @@ describe('Radiobox component', () => {
 
     await userEvent.click(blue);
     expect(handleChange).toHaveBeenCalled();
-
-    logDOM(red);
-    logDOM(blue);
 
     rerender(
       <div>

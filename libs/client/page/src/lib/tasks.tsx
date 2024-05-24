@@ -309,6 +309,7 @@ export const Tasks = () => {
       />
 
       <ConfirmModal
+        message="Are you sure you want to delete this task?"
         isOpen={!!deleteTaskId}
         onClose={onDeleteToggle()}
         confirmBtnLabel={deleting ? 'Deleting...' : 'Delete'}

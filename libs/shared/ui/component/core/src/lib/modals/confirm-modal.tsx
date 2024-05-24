@@ -8,6 +8,7 @@ interface ConfirmModalProps {
   onConfirm: () => void;
   confirmBtnLabel?: string;
   pending?: boolean;
+  message: string;
 }
 
 export const ConfirmModal: FC<ConfirmModalProps> = (props) => {
@@ -17,11 +18,12 @@ export const ConfirmModal: FC<ConfirmModalProps> = (props) => {
     onConfirm,
     confirmBtnLabel = 'Confirm',
     pending = false,
+    message,
   } = props;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="🗑️ Delete Task">
-      <p>Are you sure you want to delete this task?</p>
+      <p>{message}</p>
       <div className="flex justify-end gap-2 mt-4">
         <Button onClick={onClose}>Cancel</Button>
 
