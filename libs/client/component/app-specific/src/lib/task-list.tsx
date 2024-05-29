@@ -58,6 +58,7 @@ export const TaskList: FC<TaskListProps> = (props) => {
         <Masonry gutter="2rem">
           {data.map((item) => (
             <TaskCard
+              role="listitem"
               key={item.id}
               task={item as Task}
               renderActionMenu={handleRenderActionMenu(item as Task)}
