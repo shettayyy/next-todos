@@ -6,18 +6,23 @@ export interface MenuProps extends Omit<FloatProps, 'children'> {
   children:
     | ((props: { close: () => void }) => React.ReactElement)
     | React.ReactElement;
+  btnTestId?: string;
 }
 
 export const Menu: FC<MenuProps> = ({
   children,
   button,
   offset = 4,
+  btnTestId = 'menu-button',
   ...restProps
 }) => {
   return (
     <Popover className="relative">
       <Float offset={offset} {...restProps}>
-        <PopoverButton className="focus:outline-none transition-all">
+        <PopoverButton
+          data-testid={btnTestId}
+          className="focus:outline-none transition-all"
+        >
           {button}
         </PopoverButton>
 

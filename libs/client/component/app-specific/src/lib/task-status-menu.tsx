@@ -30,6 +30,10 @@ export const TaskStatusMenu: FC<TaskStatusMenuProps> = (props) => {
             key={status.id}
             className="text-neutral-200 hover:bg-neutral-600 cursor-pointer"
             onClick={handleChange(status)}
+            data-testid={`task-status-menu-item-${status.status.replace(
+              /\s/g,
+              '-'
+            )}`}
           >
             <div className="px-4 py-2 flex gap-2 hover:scale-105 transition-all items-center">
               <span

@@ -17,52 +17,6 @@ import {
 
 vi.mock('@task-master/client/context');
 
-const mockTasks = [
-  {
-    id: '1',
-    title: 'Task 1',
-    description: 'This is task 1',
-    status: '6642596955c5a701cafe6b24',
-    taskStatus: {
-      id: '6642596955c5a701cafe6b24',
-      status: 'To Do',
-      bgColor: '#DBE8FE',
-      textColor: '#1E40AF',
-    },
-    createdAt: '1630300800000',
-    updatedAt: '1630300800000',
-  },
-  {
-    id: '2',
-    title: 'Task 2',
-    description: 'This is task 2',
-    status: '6642597155c5a701cafe6b30',
-    taskStatus: {
-      id: '6642597155c5a701cafe6b30',
-      status: 'In Progress',
-      bgColor: '#FEF9C3',
-      textColor: '#854D0E',
-    },
-    createdAt: '1630300800000',
-    updatedAt: '1630300800000',
-  },
-];
-
-const mockCreateTask = {
-  id: '2',
-  title: 'New Task',
-  description: 'This is a new task',
-  status: '6642596955c5a701cafe6b24',
-  taskStatus: {
-    id: '6642596955c5a701cafe6b24',
-    status: 'To Do',
-    bgColor: '#DBE8FE',
-    textColor: '#1E40AF',
-  },
-  createdAt: '1630300800000',
-  updatedAt: '1630300800000',
-};
-
 const mockTaskStatuses = [
   {
     id: '6642596955c5a701cafe6b24',
@@ -83,6 +37,37 @@ const mockTaskStatuses = [
     textColor: '#166534',
   },
 ];
+
+const mockTasks = [
+  {
+    id: '1',
+    title: 'Task 1',
+    description: 'This is task 1',
+    status: mockTaskStatuses[0].id,
+    taskStatus: mockTaskStatuses[0],
+    createdAt: '1630300800000',
+    updatedAt: '1630300800000',
+  },
+  {
+    id: '2',
+    title: 'Task 2',
+    description: 'This is task 2',
+    status: mockTaskStatuses[1].id,
+    taskStatus: mockTaskStatuses[1],
+    createdAt: '1630300800000',
+    updatedAt: '1630300800000',
+  },
+];
+
+const mockCreateTask = {
+  id: '2',
+  title: 'New Task',
+  description: 'This is a new task',
+  status: mockTaskStatuses[0].id,
+  taskStatus: mockTaskStatuses[0],
+  createdAt: '1630300800000',
+  updatedAt: '1630300800000',
+};
 
 const mocks = [
   {
@@ -247,6 +232,135 @@ describe('Tasks', () => {
     await waitFor(() => {
       expect(screen.getAllByRole('listitem')).toHaveLength(
         mockTasks.length + 1
+      );
+    });
+  });
+
+  it('deletes a task', async () => {
+    const deleteTaskMock = {
+      request: {
+        query: DELETE_TASK,
+        variables: {
+          id: mockTasks[0].id,
+        },
+      },
+      result: {
+        data: {
+          deleteTask: {
+            id: mockTasks[0].id,
+          },
+        },
+      },
+    };
+
+    const updatedTasksMock = {
+      ...mocks[0],
+      result: {
+        data: {
+          tasks: {
+            result: [mockTasks[1]],
+            metadata: {
+              pagination: {
+                currentPage: 1,
+                nextPage: 2,
+                prevPage: null,
+                total: 1,
+              },
+            },
+          },
+        },
+      },
+    };
+
+    render(
+      <TaskComponent allMocks={[...mocks, deleteTaskMock, updatedTasksMock]} />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Task 1')).toBeInTheDocument();
+    });
+
+    const menuButton = screen.queryAllByTestId('task-list-menu-btn')[0];
+    await userEvent.click(menuButton);
+
+    const deleteButton = screen.getByTestId('delete-task');
+    await userEvent.click(deleteButton);
+
+    const confirmButton = screen.getByRole('button', { name: 'Delete' });
+    await userEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(screen.getAllByRole('listitem')).toHaveLength(1);
+    });
+  });
+
+  it('updates a task status', async () => {
+    const updateTaskMock = {
+      request: {
+        query: UPDATE_TASK,
+        variables: {
+          id: mockTasks[0].id,
+          input: {
+            status: mockTaskStatuses[1].id,
+          },
+        },
+      },
+      result: {
+        data: {
+          updateTask: {
+            id: mockTasks[0].id,
+          },
+        },
+      },
+    };
+
+    const updatedTasksMock = {
+      ...mocks[0],
+      result: {
+        data: {
+          tasks: {
+            result: [
+              {
+                ...mockTasks[0],
+                status: mockTaskStatuses[1].id,
+                taskStatus: mockTaskStatuses[1],
+              },
+              mockTasks[1],
+            ],
+            metadata: {
+              pagination: {
+                currentPage: 1,
+                nextPage: 2,
+                prevPage: null,
+                total: 2,
+              },
+            },
+          },
+        },
+      },
+    };
+
+    render(
+      <TaskComponent allMocks={[...mocks, updateTaskMock, updatedTasksMock]} />
+    );
+
+    await waitFor(() => {
+      const taskItem1 = screen.getAllByRole('listitem')[0];
+
+      expect(taskItem1).toHaveTextContent('To Do');
+    });
+
+    const menuButton = screen.queryAllByTestId('task-list-menu-btn')[0];
+    await userEvent.click(menuButton);
+
+    const inProgressButton = screen.getByTestId(
+      'task-status-menu-item-In-Progress'
+    );
+    await userEvent.click(inProgressButton);
+
+    await waitFor(() => {
+      expect(screen.getAllByRole('listitem')[0]).toHaveTextContent(
+        'In Progress'
       );
     });
   });

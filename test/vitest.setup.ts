@@ -24,3 +24,16 @@ global.IntersectionObserver = class IntersectionObserver {
     return [];
   }
 };
+
+global.ResizeObserver = class ResizeObserver {
+  constructor() {}
+  observe() {
+    return null;
+  }
+  unobserve() {
+    return null;
+  }
+  disconnect() {
+    return null;
+  }
+};

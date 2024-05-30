@@ -23,9 +23,13 @@ export const TaskMenu: FC<TaskMenuProps> = (props) => {
     };
 
   return (
-    <Menu button={<DotMenuIcon className="w-5 h-5" />} placement="bottom-end">
+    <Menu
+      btnTestId="task-list-menu-btn"
+      button={<DotMenuIcon className="w-5 h-5" />}
+      placement="bottom-end"
+    >
       {({ close }) => (
-        <div>
+        <div data-testid="task-menu">
           {/* Update Statuses */}
           <TaskStatusMenu
             taskStatuses={taskStatuses}
@@ -54,6 +58,7 @@ export const TaskMenu: FC<TaskMenuProps> = (props) => {
 
               {/* Delete Task */}
               <li
+                data-testid="delete-task"
                 onClick={onDeleteToggle(task.id)}
                 className="text-neutral-200 hover:bg-neutral-600 cursor-pointer"
               >
