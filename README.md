@@ -60,3 +60,19 @@ It will show tasks that you can run with Nx.
 ## View details about the project
 
 Run `nx show project task-master-ui --web` to show the details of the app.
+
+## Test the application
+
+We use vitest for testing. Run `yarn test` to run the entire test suite.
+
+If you want to run a tests for a specific project, you can use the following command:
+
+```shell
+npx nx test shared-ui-component-core
+```
+
+If you would like to get a coverage report, you can use the following command:
+
+```shell
+npx nx test shared-ui-component-core --coverage
+```
