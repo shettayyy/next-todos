@@ -39,7 +39,9 @@ describe('userAuthService', () => {
       const mockPassword = 'password123';
       const mockResult = { id: '123', ...mockUser };
 
-      vi.mocked(UserModel.register).mockResolvedValue(mockResult as any);
+      vi.mocked(UserModel.register).mockResolvedValue(
+        mockResult as unknown as void
+      );
 
       const result = await userAuthService.createUser(mockUser, mockPassword);
 
@@ -75,10 +77,8 @@ describe('userAuthService', () => {
       };
       const mockUpdatedUser = { ...mockExistingUser, ...mockUpdateData };
 
-      vi.mocked(UserModel.findOne).mockResolvedValue(mockExistingUser as any);
-      vi.mocked(UserModel.findOneAndUpdate).mockResolvedValue(
-        mockUpdatedUser as any
-      );
+      vi.mocked(UserModel.findOne).mockResolvedValue(mockExistingUser);
+      vi.mocked(UserModel.findOneAndUpdate).mockResolvedValue(mockUpdatedUser);
 
       const result = await userAuthService.updateUser(mockId, mockUpdateData);
 
@@ -112,7 +112,7 @@ describe('userService', () => {
       const mockId = '123';
       const mockUser = { id: mockId, firstName: 'John', lastName: 'Doe' };
 
-      vi.mocked(UserModel.findById).mockResolvedValue(mockUser as any);
+      vi.mocked(UserModel.findById).mockResolvedValue(mockUser);
 
       const result = await userService.getUser(mockId);
 

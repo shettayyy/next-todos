@@ -19,4 +19,7 @@ export enum ErrorCode {
   // File Upload
   InvalidFileExtension = 'INVALID_FILE_EXTENSION',
   FailedToGenerateSignedURL = 'FAILED_TO_GENERATE_SIGNED_URL',
+
+  // Unknown Error
+  Unknown = 'UNKNOWN',
 }
