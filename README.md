@@ -37,6 +37,14 @@ Run `yarn` to install the dependencies.
 
 Run `yarn test` to execute the unit tests via Vitest.
 
+## Auth credentials
+
+- You can use the following credentials to login to the application:
+  - Email: `john.doe@gmail.com`
+  - Password: `123456789`
+- You should see a list of tasks after logging in.
+- You can also register a new user by clicking on the `Sign up` link on the login page.
+
 ## Folder Structure
 
 - `apps/task-master-ui`: Frontend application built with Next.js.
