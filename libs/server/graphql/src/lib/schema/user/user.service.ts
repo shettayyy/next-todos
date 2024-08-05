@@ -171,7 +171,7 @@ export const userService = {
       });
     }
 
-    const res = await getSignedUploadUrl(`user-profiles/${userId}/${filename}`);
+    const res = await getSignedUploadUrl(`user-profiles/${userId}.${ext}`);
 
     if (!res) {
       throw new GraphQLError('Failed to generate signed URL', {
