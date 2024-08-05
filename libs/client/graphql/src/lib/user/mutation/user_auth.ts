@@ -7,6 +7,7 @@ export const LOGIN = gql(/* GraphQL */ `
       firstName
       id
       lastName
+      profilePictureURL
     }
   }
 `);
