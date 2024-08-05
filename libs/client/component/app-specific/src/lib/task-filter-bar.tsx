@@ -10,6 +10,7 @@ import { Input, Menu } from '@task-master/shared/ui/component/core';
 // import { useDebounce } from '@task-master/shared/ui/hooks';
 import { FC, useEffect, useRef, useState } from 'react';
 import { TaskStatusMenu } from './task-status-menu';
+import { useDebounce } from '@task-master/shared/ui/hooks';
 
 export interface SortOption extends TaskSort {
   label: string;
@@ -47,7 +48,7 @@ export const TASK_SORT_OPTIONS: SortOption[] = [
 export const TaskFilterBar: FC<TaskFilterBarProps> = (props) => {
   const { taskStatuses, onFilterChange } = props;
   const [searchTerm, setSearchTerm] = useState('');
-  // const debouncedSearch = useDebounce(searchTerm, 500);
+  const debouncedSearch = useDebounce(searchTerm, 500);
   const taskStatusOptions = [
     {
       id: '-1',
@@ -79,24 +80,26 @@ export const TaskFilterBar: FC<TaskFilterBarProps> = (props) => {
       Object.keys(prevFilters.current).every(
         (key) =>
           prevFilters.current[key as keyof TaskFilters] ===
-          { searchTerm, selectedStatus, selectedSort }[key as keyof TaskFilters]
+          { searchTerm: debouncedSearch, selectedStatus, selectedSort }[
+            key as keyof TaskFilters
+          ]
       )
     ) {
       return;
     }
 
     prevFilters.current = {
-      searchTerm,
+      searchTerm: debouncedSearch,
       selectedStatus,
       selectedSort,
     };
 
     onFilterChange({
-      searchTerm,
+      searchTerm: debouncedSearch,
       selectedStatus,
       selectedSort,
     });
-  }, [searchTerm, selectedStatus, selectedSort, onFilterChange]);
+  }, [debouncedSearch, selectedStatus, selectedSort, onFilterChange]);
 
   return (
     <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full justify-between">
